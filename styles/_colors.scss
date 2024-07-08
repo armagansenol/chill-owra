@@ -1,0 +1,22 @@
+@use "sass:color";
+
+// Each color filled here will create a css variable exposed globally
+$colors: (
+  "white": rgb(255, 255, 255),
+  "black": rgb(21, 24, 25),
+  "error": rgb(229, 72, 77),
+  "wash-me": rgb(250, 250, 255),
+  "the-rainbow-fish": rgb(67, 94, 233),
+  "carte-blanche": rgb(235, 239, 255),
+  "punch-out-glove": rgb(108, 132, 255),
+  "ragweed": rgb(126, 227, 146),
+  "unicorn-silver": rgb(232, 232, 232),
+);
+
+:root {
+  @each $name, $color in $colors {
+    --#{$name}: #{$color};
+    // for safari use case: https://ambientimpact.com/web/snippets/safari-bug-with-gradients-that-fade-to-transparent
+    --#{$name}-transparent: #{color.change($color, $alpha: 0)};
+  }
+}

@@ -1,0 +1,10 @@
+.defaultLayout {
+  background-image: url("../../public/img/dots.svg");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  padding-top: var(--header-height);
+  background-color: var(--theme-primary);
+  overflow: hidden;
+  position: relative;
+  z-index: z-index("main");
+}
