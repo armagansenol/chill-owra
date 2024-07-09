@@ -1,4 +1,3 @@
-import useMousePosition from "@/hooks/use-mouse-position"
 import { MeshTransmissionMaterial, useGLTF } from "@react-three/drei"
 import { ThreeElements, useFrame, useLoader } from "@react-three/fiber"
 import { CuboidCollider, RapierRigidBody, RigidBody } from "@react-three/rapier"
@@ -51,9 +50,6 @@ export default function IceCube(props: Props) {
     roughness: { value: 0.0, min: 0, max: 1, step: 0.01 },
     thickness: { value: 3, min: 0, max: 10, step: 0.01 },
     ior: { value: 1.5, min: 1, max: 5, step: 0.01 },
-    iridescence: { value: 1, min: 1, max: 5, step: 0.01 },
-    iridescenceIOR: { value: 1, min: 1, max: 5, step: 0.01 },
-    iridescenceThicknessRange: { value: [0, 1400], min: 1, max: 5, step: 0.01 },
     chromaticAberration: { value: 0.025, min: 0, max: 1 },
     anisotropy: { value: 0.1, min: 0, max: 1, step: 0.01 },
     distortion: { value: 0.1, min: 0, max: 1, step: 0.01 },
@@ -61,9 +57,10 @@ export default function IceCube(props: Props) {
     temporalDistortion: { value: 0.2, min: 0, max: 1, step: 0.01 },
     clearcoat: { value: 1, min: 0, max: 1 },
     attenuationDistance: { value: 0.5, min: 0, max: 10, step: 0.01 },
-    attenuationColor: "#ffffff",
-    color: "#ffffff",
-    bg: "#ffffff",
+    toneMapped: true,
+    // attenuationColor: "#ffffff",
+    // color: "#ffffff",
+    // bg: "#ffffff",
   })
 
   // const transition = useTransition(meshRef.current, {
@@ -82,7 +79,7 @@ export default function IceCube(props: Props) {
         ref={api}
         colliders={false}
         enabledRotations={[false, false, true]}
-        enabledTranslations={[true, true, true]}
+        enabledTranslations={[true, true, false]}
         linearDamping={5}
         angularDamping={5}
         mass={1}
@@ -91,29 +88,15 @@ export default function IceCube(props: Props) {
         ccd={true}
         restitution={0}
         friction={0}
-        // {...props}
       >
-        <group
-          scale={props.scale}
-          dispose={null}
-
-          //   onPointerUp={(e: ThreeEvent<PointerEvent>) => {
-          //     if (!e.target) return
-          //     e.target?.releasePointerCapture(e.pointerId)
-          //     drag(false)
-          //   }}
-          //   onPointerDown={(e: ThreeEvent<PointerEvent>) => {
-          //     if (!e.target) return
-          //     if (!api.current) return
-
-          //     e.target?.setPointerCapture(e.pointerId)
-          //     drag(new THREE.Vector3().copy(e.point).sub(vec.copy(api.current.translation())))
-          //   }}
-        >
+        <group scale={props.scale} dispose={null}>
           <group rotation={[-Math.PI, 0, 0]}>
             <mesh castShadow geometry={nodes.pCube1.geometry} rotation={[-Math.PI, 0, 0]}>
-              <MeshTransmissionMaterial {...materialProps} />
+              <MeshTransmissionMaterial {...materialProps} transparent={true} />
               <CuboidCollider args={[0.8, 0.8, 0.8]} />
+              {/* <mesh geometry={new THREE.BoxGeometry(1.5, 1.5, 1.5)} position={[0, 0, -1]}>
+                <meshBasicMaterial map={colorMap} transparent={true} />
+              </mesh> */}
             </mesh>
           </group>
         </group>

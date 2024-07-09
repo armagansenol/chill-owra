@@ -1,9 +1,13 @@
 .modal {
   @include position(fixed, 0, 0, 0, 0);
   @include dims(100vw, 100vh);
-  background-color: rgb(240, 89, 49, 0.3);
+  background-color: rgb(0, 0, 0, 0.3);
   backdrop-filter: blur(16px);
   z-index: z-index("modal");
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   // initial
   opacity: 0;

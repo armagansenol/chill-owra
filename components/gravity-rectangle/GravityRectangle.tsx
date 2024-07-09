@@ -1,5 +1,5 @@
 import { gsap } from "@/lib/gsap"
-import { Environment, Float, Html, Sphere } from "@react-three/drei"
+import { Environment, Html, Sphere, Text } from "@react-three/drei"
 import { Canvas, extend, useFrame, useLoader, useThree } from "@react-three/fiber"
 import { EffectComposer, N8AO } from "@react-three/postprocessing"
 import { CuboidCollider, Physics, RapierRigidBody, RigidBody } from "@react-three/rapier"
@@ -7,18 +7,9 @@ import cx from "clsx"
 import { useControls } from "leva"
 import { easing } from "maath"
 import dynamic from "next/dynamic"
-import { Fragment, useEffect, useMemo, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import * as THREE from "three"
-import {
-  AmbientLight,
-  BoxGeometry,
-  EdgesGeometry,
-  Euler,
-  LineBasicMaterial,
-  LineSegments,
-  SpotLight,
-  Vector3,
-} from "three"
+import { AmbientLight, SpotLight, Vector3 } from "three"
 import { IceModel } from "../ice-model"
 import s from "./three-fiber-ultia.module.scss"
 extend({ AmbientLight, SpotLight })
@@ -44,7 +35,7 @@ export default function GravityRectangle(props: GravityRectangleProps) {
       <Canvas orthographic camera={{ position: [0, 0, 1], zoom: 100, fov: 50 }}>
         {/* <color attach="background" args={["#ffffff"]} /> */}
 
-        <Physics gravity={[0, -6, 0]}>
+        <Physics gravity={[0, 0, 0]}>
           {Array.from({ length: iceCount }, (v, i) => (
             <IceCube key={i} scale={gsap.utils.random(0.3, 0.4)} />
           ))}
@@ -52,22 +43,27 @@ export default function GravityRectangle(props: GravityRectangleProps) {
           <Pointer />
         </Physics>
 
-        {/* <OrbitControls /> */}
-
-        <Float floatIntensity={0.5} floatingRange={[0, 0.5]} rotationIntensity={0.5} speed={2}>
-          <IceModel />
-        </Float>
+        <IceModel />
 
         <group rotation={[0, 0, Math.PI / 4]}>
-          <mesh position={[0, 0, -20]}>
-            <sphereGeometry args={[3, 8, 64]} />
+          <mesh position={[0, 0, -30]}>
+            <sphereGeometry args={[3, 10, 64]} />
             <meshBasicMaterial color="#e4f6f8" side={THREE.DoubleSide} />
           </mesh>
-          {/* <mesh position={[0, 0, -10]}>
-            <planeGeometry args={[2, 20]} />
-            <meshBasicMaterial color="#FF5B4A" side={THREE.DoubleSide} />
-          </mesh> */}
         </group>
+
+        <Text
+          position={[0, 0, -10]}
+          font="/fonts/dela-gothic-one/DelaGothicOne-Regular.ttf"
+          fontSize={1.5}
+          color="#D9D9D9"
+          anchorX="center"
+          anchorY="middle"
+          strokeWidth={1}
+          strokeColor={"#E1E1E1"}
+        >
+          {`Coming Soon`}
+        </Text>
 
         <Environment {...envProps} files="/hdr/adams_place_bridge_1k.hdr" />
 
@@ -79,7 +75,7 @@ export default function GravityRectangle(props: GravityRectangleProps) {
         <spotLight position={[20, 20, 10]} penumbra={1} castShadow angle={0.2} />
         <pointLight position={[-10, -10, -10]} />
 
-        {/* <Rig /> */}
+        <Rig />
       </Canvas>
     </div>
   )
@@ -97,10 +93,6 @@ function Walls() {
       <CuboidCollider position={[-viewportWidth / 2 - 1, 0, 0]} args={[1, viewportHeight * 10, 10]} />
       <CuboidCollider position={[viewportWidth / 2 + 1, 0, 0]} args={[1, viewportHeight * 10, 1]} />
       {/* rectangle */}
-
-      {/* circle */}
-      {/* <CircleColliders radius={radius} segmentCount={360} height={0.025} /> */}
-      {/* circle */}
     </>
   )
 }
@@ -108,12 +100,9 @@ function Walls() {
 function Pointer({ vec = new Vector3() }) {
   const api = useRef<RapierRigidBody>(null)
 
-  useFrame(({ pointer, viewport }) => {
-    const vectorX = (pointer.x * viewport.width) / 2
-    const vectorY = (pointer.y * viewport.height) / 2
-    const vectorZ = 0
-
-    api.current?.setNextKinematicTranslation({ x: vectorX, y: vectorY, z: vectorZ })
+  useFrame(({ pointer, viewport }, delta) => {
+    easing.damp3(vec, [(pointer.x * viewport.width) / 2, (pointer.y * viewport.height) / 2, 0], 0, delta, Infinity)
+    api.current?.setNextKinematicTranslation(vec)
   })
 
   return (
@@ -125,61 +114,11 @@ function Pointer({ vec = new Vector3() }) {
   )
 }
 
-interface WireframeColliderProps {
-  position: Vector3
-  args: any
-}
-
-const WireframeCollider = ({ position, args }: WireframeColliderProps) => {
-  const [edges, setEdges] = useState<LineSegments | null>(null)
-
-  useEffect(() => {
-    const geometry = new BoxGeometry(...args)
-    const edgesGeometry = new EdgesGeometry(geometry)
-    const lineMaterial = new LineBasicMaterial({ color: "#000000" })
-    const lineSegments = new LineSegments(edgesGeometry, lineMaterial)
-    setEdges(lineSegments)
-  }, [args])
-
-  return edges ? <primitive object={edges} position={position} /> : null
-}
-
-interface ColliderProps {
-  radius: number
-  segmentCount: number
-  height: number
-}
-
-function CircleColliders({ radius, segmentCount, height }: ColliderProps) {
-  const { width: viewportWidth } = useThree((state) => state.viewport)
-
-  const colliders = useMemo((): { position: Vector3; rotation: Euler }[] => {
-    const angleStep = (2 * Math.PI) / segmentCount
-    return Array.from({ length: segmentCount }).map((_, i) => {
-      const angle = i * angleStep
-      const x = radius * Math.cos(angle)
-      const y = radius * Math.sin(angle)
-      return { position: new Vector3(x, y, 0), rotation: new Euler(0, angle, 0) }
-    })
-  }, [radius, segmentCount])
-
-  return (
-    <>
-      {colliders.map(({ position, rotation }, i) => (
-        <Fragment key={i}>
-          <CuboidCollider key={i} position={position} args={[height, height, 0]} rotation={rotation} />
-          <WireframeCollider position={position} args={[height, height, 0]} />
-        </Fragment>
-      ))}
-    </>
-  )
-}
-
 function Rig() {
   useFrame((state, delta) => {
     easing.damp3(
       state.camera.position,
-      [Math.sin(-state.pointer.x) * 5, state.pointer.y * 3.5, 15 + Math.cos(state.pointer.x) * 10],
+      [Math.sin(-state.pointer.x) / 2, state.pointer.y / 2, 15 + Math.cos(state.pointer.x) / 2],
       0.2,
       delta
     )
