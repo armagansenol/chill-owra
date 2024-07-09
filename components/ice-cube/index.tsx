@@ -1,5 +1,7 @@
-import { MeshTransmissionMaterial, useGLTF } from "@react-three/drei"
-import { ThreeElements, useFrame, useLoader } from "@react-three/fiber"
+import { gsap } from "@/lib/gsap"
+import { useTransition } from "@react-spring/three"
+import { Float, MeshTransmissionMaterial, useGLTF } from "@react-three/drei"
+import { useFrame, useLoader } from "@react-three/fiber"
 import { CuboidCollider, RapierRigidBody, RigidBody } from "@react-three/rapier"
 import { useControls } from "leva"
 import * as React from "react"
@@ -17,38 +19,35 @@ type GLTFResult = GLTF & {
 
 interface Props {
   scale: number
+  position: THREE.Vector3
 }
 
 export default function IceCube(props: Props) {
-  const meshRef = React.useRef<ThreeElements["mesh"] | null>(null)
   const api = React.useRef<RapierRigidBody | null>(null)
   const { nodes } = useGLTF("/glb/ice-origin-center.glb") as GLTFResult
+  const meshRef = React.useRef<any>(null)
 
-  const [dragged, drag] = React.useState<{ x: number; y: number; z: number } | null>(null)
+  const texture = useLoader(THREE.TextureLoader, "/img/ice-texture.jpg")
+  const bump = useLoader(THREE.TextureLoader, "/img/ice-bump.jpg")
 
-  const colorMap = useLoader(THREE.TextureLoader, "/img/ice-texture.jpg")
+  React.useMemo(() => {
+    const vec2 = new THREE.Vector2(1, 1)
+    texture.wrapS = THREE.RepeatWrapping
+    texture.wrapT = THREE.RepeatWrapping
+    texture.repeat.set(vec2.x, vec2.y)
 
-  const vec = new THREE.Vector3()
-  const dir = new THREE.Vector3()
-
-  useFrame((state) => {
-    if (dragged) {
-      vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera)
-      dir.copy(vec).sub(state.camera.position).normalize()
-      vec.add(dir.multiplyScalar(state.camera.position.length()))
-      api.current?.wakeUp()
-      api.current?.setNextKinematicTranslation({ x: vec.x - dragged.x, y: vec.y - dragged.y, z: 0 })
-    }
-  })
+    bump.wrapS = THREE.RepeatWrapping
+    bump.wrapT = THREE.RepeatWrapping
+    bump.repeat.set(vec2.x, vec2.y)
+  }, [texture, bump])
 
   const materialProps = useControls({
     transmissionSampler: true,
-    backside: true,
     samples: { value: 4, min: 1, max: 32, step: 1 },
     resolution: { value: 512, min: 256, max: 2048, step: 256 },
     transmission: { value: 1, min: 0, max: 1 },
     roughness: { value: 0.0, min: 0, max: 1, step: 0.01 },
-    thickness: { value: 3, min: 0, max: 10, step: 0.01 },
+    thickness: { value: 1, min: 0, max: 10, step: 0.01 },
     ior: { value: 1.5, min: 1, max: 5, step: 0.01 },
     chromaticAberration: { value: 0.025, min: 0, max: 1 },
     anisotropy: { value: 0.1, min: 0, max: 1, step: 0.01 },
@@ -57,21 +56,18 @@ export default function IceCube(props: Props) {
     temporalDistortion: { value: 0.2, min: 0, max: 1, step: 0.01 },
     clearcoat: { value: 1, min: 0, max: 1 },
     attenuationDistance: { value: 0.5, min: 0, max: 10, step: 0.01 },
-    toneMapped: true,
-    // attenuationColor: "#ffffff",
-    // color: "#ffffff",
-    // bg: "#ffffff",
+    attenuationColor: "#e4f6f8",
+    color: "#e4f6f8",
+    bg: "#e4f6f8",
   })
 
-  // const transition = useTransition(meshRef.current, {
-  //   from: { scale: [0, 0, 0], rotation: [0, 0, 0] },
-  //   enter: ({ r }) => ({ scale: [1, 1, 1], rotation: [r * 3, r * 3, r * 3] }),
-  //   leave: { scale: [0.1, 0.1, 0.1], rotation: [0, 0, 0] },
-  //   config: { mass: 5, tension: 1000, friction: 100 },
-  //   trail: 100,
-  // })
-
-  // const { x = 0, y = 0 } = useMousePosition()
+  useFrame(() => {
+    if (meshRef.current) {
+      meshRef.current.rotation.x += 0.001
+      meshRef.current.rotation.y += 0.001
+      meshRef.current.rotation.z += 0.001
+    }
+  })
 
   return (
     <>
@@ -80,26 +76,41 @@ export default function IceCube(props: Props) {
         colliders={false}
         enabledRotations={[false, false, true]}
         enabledTranslations={[true, true, false]}
-        linearDamping={5}
-        angularDamping={5}
-        mass={1}
+        linearDamping={2}
+        angularDamping={2}
+        mass={0}
         canSleep={false}
-        type={dragged ? "kinematicPosition" : "dynamic"}
-        ccd={true}
         restitution={0}
-        friction={0}
+        friction={10}
+        ccd={true}
+        position={props.position}
+        scale={props.scale}
       >
-        <group scale={props.scale} dispose={null}>
-          <group rotation={[-Math.PI, 0, 0]}>
+        <Float floatIntensity={2}>
+          <group dispose={null} ref={meshRef}>
             <mesh castShadow geometry={nodes.pCube1.geometry} rotation={[-Math.PI, 0, 0]}>
-              <MeshTransmissionMaterial {...materialProps} transparent={true} />
-              <CuboidCollider args={[0.8, 0.8, 0.8]} />
-              {/* <mesh geometry={new THREE.BoxGeometry(1.5, 1.5, 1.5)} position={[0, 0, -1]}>
-                <meshBasicMaterial map={colorMap} transparent={true} />
-              </mesh> */}
+              <MeshTransmissionMaterial
+                {...materialProps}
+                map={texture}
+                // bumpMap={bump}
+                // bumpScale={1.3}
+                displacementMap={bump}
+                displacementScale={0.1}
+                opacity={0.5}
+                transparent={true}
+              />
+              {/* <meshPhongMaterial
+                  map={texture}
+                  // displacementMap={texture}
+                  // displacementScale={0.1}
+                  transparent={true}
+                  opacity={0.6}
+                /> */}
+              {/* <meshStandardMaterial map={texture} /> */}
+              <CuboidCollider args={[1, 1, 1]} />
             </mesh>
           </group>
-        </group>
+        </Float>
       </RigidBody>
     </>
   )

@@ -320,4 +320,24 @@ function IconComingSoon(props: Props) {
     </span>
   )
 }
-export { OwraLogo, IconCursorClick, IconComingSoon }
+
+function IconClose(props: Props) {
+  return (
+    <span className="w-inherit h-inherit block" style={{ transform: `rotate(${props.rotate ?? 0}deg)` }}>
+      <svg width="100%" height="100%" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M0 20L6.92787 9.99156L0.249332 0H5.14693L10.1158 8.32067L14.9777 0H19.8219L13.1256 9.99156L20 20H15.1202L9.93767 11.6624L4.84417 20H0Z"
+          fill="white"
+        />
+      </svg>
+    </span>
+  )
+}
+
+;<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path
+    d="M0 20L6.92787 9.99156L0.249332 0H5.14693L10.1158 8.32067L14.9777 0H19.8219L13.1256 9.99156L20 20H15.1202L9.93767 11.6624L4.84417 20H0Z"
+    fill="white"
+  />
+</svg>
+export { OwraLogo, IconCursorClick, IconComingSoon, IconClose }

@@ -10,14 +10,15 @@ import dynamic from "next/dynamic"
 import { useRef, useState } from "react"
 import * as THREE from "three"
 import { AmbientLight, SpotLight, Vector3 } from "three"
-import { IceModel } from "../ice-model"
+import { LoadingSpinner } from "../utility/loading-spinner"
 import s from "./three-fiber-ultia.module.scss"
+import { IceModel } from "../ice-model"
 extend({ AmbientLight, SpotLight })
 
 const IceCube = dynamic(() => import("@/components/ice-cube"), {
   loading: () => (
     <Html>
-      <p>Loading...</p>
+      <LoadingSpinner />
     </Html>
   ),
   ssr: false,
@@ -26,18 +27,20 @@ const IceCube = dynamic(() => import("@/components/ice-cube"), {
 export interface GravityRectangleProps {}
 
 export default function GravityRectangle(props: GravityRectangleProps) {
-  const icesMap = useLoader(THREE.TextureLoader, "/img/ices.png")
-  const [iceCount, setIceCount] = useState(10)
   const envProps = useControls({ background: false })
 
   return (
-    <div className={cx(s.wrapper, "w-full h-full")} onClick={() => setIceCount((prev) => prev + 1)}>
-      <Canvas orthographic camera={{ position: [0, 0, 1], zoom: 100, fov: 50 }}>
-        {/* <color attach="background" args={["#ffffff"]} /> */}
+    <div className={cx(s.wrapper, "w-full h-full")}>
+      <Canvas orthographic camera={{ position: [0, 0, 1], zoom: 100 }} frameloop="demand">
+        {/* <color attach="background" args={["#e4f6f8"]} /> */}
 
         <Physics gravity={[0, 0, 0]}>
-          {Array.from({ length: iceCount }, (v, i) => (
-            <IceCube key={i} scale={gsap.utils.random(0.3, 0.4)} />
+          {Array.from({ length: 30 }, (v, i) => (
+            <IceCube
+              key={i}
+              scale={gsap.utils.random(0.3, 0.5, 0.001)}
+              position={new THREE.Vector3(gsap.utils.random(-5, 5), gsap.utils.random(-5, 5), 0)}
+            />
           ))}
           <Walls />
           <Pointer />
@@ -45,12 +48,19 @@ export default function GravityRectangle(props: GravityRectangleProps) {
 
         <IceModel />
 
-        <group rotation={[0, 0, Math.PI / 4]}>
+        <group rotation={[0, 0, 0]}>
           <mesh position={[0, 0, -30]}>
             <sphereGeometry args={[3, 10, 64]} />
             <meshBasicMaterial color="#e4f6f8" side={THREE.DoubleSide} />
           </mesh>
         </group>
+
+        {/* <group rotation={[0, 0, 0]}>
+          <mesh position={[0, 0, -35]}>
+            <sphereGeometry args={[5, 10, 40]} />
+            <meshBasicMaterial color="#7CB9E8" side={THREE.DoubleSide} />
+          </mesh>
+        </group> */}
 
         <Text
           position={[0, 0, -10]}
@@ -59,8 +69,9 @@ export default function GravityRectangle(props: GravityRectangleProps) {
           color="#D9D9D9"
           anchorX="center"
           anchorY="middle"
-          strokeWidth={1}
+          strokeWidth={5}
           strokeColor={"#E1E1E1"}
+          strokeOpacity={1}
         >
           {`Coming Soon`}
         </Text>
@@ -69,12 +80,14 @@ export default function GravityRectangle(props: GravityRectangleProps) {
 
         <EffectComposer>
           <N8AO aoRadius={3} distanceFalloff={3} intensity={1} />
+          {/* <Bloom mipmapBlur luminanceThreshold={1} intensity={2} /> */}
+          {/* <BrightnessContrast brightness={-0.1} contrast={0.9} /> */}
+          {/* <HueSaturation hue={0} saturation={-0.15} /> */}
         </EffectComposer>
 
         <ambientLight intensity={Math.PI * 1.5} />
         <spotLight position={[20, 20, 10]} penumbra={1} castShadow angle={0.2} />
         <pointLight position={[-10, -10, -10]} />
-
         <Rig />
       </Canvas>
     </div>

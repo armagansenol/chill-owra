@@ -1,9 +1,18 @@
-// NBInternationalPro
+// Fustat
 
 @font-face {
-  font-family: "NBInternationalPro";
-  src: url("/fonts/NBInternationalProBold.woff") format("woff"),
-    url("/fonts/NBInternationalProBold.woff2") format("woff2");
+  font-family: "Fustat";
+  src: url("/fonts/fustat/Fustat-Extra-Bold.woff") format("woff"),
+    url("/fonts/fustat/Fustat-Extra-Bold.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+000-5FF; /* Latin glyphs */
+}
+
+@font-face {
+  font-family: "Fustat";
+  src: url("/fonts/fustat/Fustat-Bold.woff") format("woff"), url("/fonts/fustat/Fustat-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -11,9 +20,9 @@
 }
 
 @font-face {
-  font-family: "NBInternationalPro";
-  src: url("/fonts/NBInternationalProMedium.woff2") format("woff2"),
-    url("/fonts/NBInternationalProMedium.woff") format("woff");
+  font-family: "Fustat";
+  src: url("/fonts/fustat/Fustat-SemiBold.woff") format("woff"),
+    url("/fonts/fustat/Fustat-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -21,9 +30,8 @@
 }
 
 @font-face {
-  font-family: "NBInternationalPro";
-  src: url("/fonts/NBInternationalProRegular.woff2") format("woff2"),
-    url("/fonts/NBInternationalProRegular.woff") format("woff");
+  font-family: "Fustat";
+  src: url("/fonts/fustat/Fustat-Medium.woff") format("woff"), url("/fonts/fustat/Fustat-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -31,9 +39,9 @@
 }
 
 @font-face {
-  font-family: "NBInternationalPro";
-  src: url("/fonts/NBInternationalProBook.woff") format("woff"),
-    url("/fonts/NBInternationalProBook.woff2") format("woff2");
+  font-family: "Fustat";
+  src: url("/fonts/fustat/Fustat-Regular.woff") format("woff"),
+    url("/fonts/fustat/Fustat-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -41,21 +49,19 @@
 }
 
 @font-face {
-  font-family: "NBInternationalPro";
-  src: url("/fonts/NBInternationalProLight.woff2") format("woff2"),
-    url("/fonts/NBInternationalProLight.woff") format("woff");
+  font-family: "Fustat";
+  src: url("/fonts/fustat/Fustat-Light.woff") format("woff"), url("/fonts/fustat/Fustat-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+000-5FF; /* Latin glyphs */
+}
+
+@font-face {
+  font-family: "Fustat";
+  src: url("/fonts/fustat/Fustat-Extra-Light.woff") format("woff"),
+    url("/fonts/fustat/Fustat-Extra-Light.woff2") format("woff2");
   font-weight: 200;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+000-5FF; /* Latin glyphs */
-}
-
-// NBInternationalProMono
-@font-face {
-  font-family: "NBInternationalProMono";
-  src: url("/fonts/NBInternationalProMono.woff2") format("woff2"),
-    url("/fonts/NBInternationalProMono.woff") format("woff");
-  font-weight: 400;
   font-style: normal;
   font-display: swap;
   unicode-range: U+000-5FF; /* Latin glyphs */
