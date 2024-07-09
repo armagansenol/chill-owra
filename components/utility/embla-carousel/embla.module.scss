@@ -1,0 +1,59 @@
+.embla {
+  --slide-spacing: #{var(--slide-spacing)};
+  width: 100%;
+
+  @include mobile {
+    --slide-spacing: #{var(--slide-spacing)};
+  }
+
+  .emblaViewport {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+
+    @include mobile {
+      padding: var(--slide-spacing);
+    }
+  }
+
+  .emblaContainer {
+    backface-visibility: hidden;
+    display: flex;
+    touch-action: pan-y;
+    margin-left: calc(var(--slide-spacing) * -1);
+    width: 100%;
+
+    .emblaSlide {
+      width: 100%;
+
+      min-width: 0;
+      padding-left: var(--slide-spacing);
+      position: relative;
+      flex-shrink: 0;
+
+      .emblaSlideContent {
+        // overflow: hidden;
+        width: 100%;
+      }
+    }
+  }
+
+  .btns {
+    @include position(absolute, 50%, desktop-vw(40px), auto, auto);
+    transform: translateY(-50%);
+  }
+
+  .prev,
+  .next {
+    cursor: pointer;
+    transition: 400ms opacity ease;
+
+    &:disabled {
+      opacity: 0;
+    }
+
+    * {
+      cursor: pointer;
+    }
+  }
+}

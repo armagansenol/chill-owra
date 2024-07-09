@@ -1,0 +1,28 @@
+.home {
+  .header {
+    @include dims(auto, var(--header-height));
+    padding: 0 desktop-vw(40px);
+
+    .logoC {
+      @include dims(desktop-vw(215px), desktop-vw(56px));
+    }
+
+    .button {
+      @include dims(desktop-vw(230px), desktop-vw(52px));
+      background-color: var(--science-blue);
+      border-radius: desktop-vw(10px);
+      padding: 0 desktop-vw(12px);
+
+      .iconC {
+        @include dims(desktop-vw(28px));
+      }
+    }
+  }
+
+  .comingSoon {
+    .iconC {
+      @include dims(auto, desktop-vw(170px));
+      margin: 0 desktop-vw(100px);
+    }
+  }
+}

@@ -1,11 +1,14 @@
 import { gsap } from "@/lib/gsap"
-import { Html, Sphere } from "@react-three/drei"
-import { Canvas, extend, useFrame, useThree } from "@react-three/fiber"
+import { Environment, Float, Html, Sphere } from "@react-three/drei"
+import { Canvas, extend, useFrame, useLoader, useThree } from "@react-three/fiber"
+import { EffectComposer, N8AO } from "@react-three/postprocessing"
 import { CuboidCollider, Physics, RapierRigidBody, RigidBody } from "@react-three/rapier"
 import cx from "clsx"
+import { useControls } from "leva"
 import { easing } from "maath"
 import dynamic from "next/dynamic"
 import { Fragment, useEffect, useMemo, useRef, useState } from "react"
+import * as THREE from "three"
 import {
   AmbientLight,
   BoxGeometry,
@@ -16,10 +19,11 @@ import {
   SpotLight,
   Vector3,
 } from "three"
+import { IceModel } from "../ice-model"
 import s from "./three-fiber-ultia.module.scss"
 extend({ AmbientLight, SpotLight })
 
-const Smiley = dynamic(() => import("@/components/smiley"), {
+const IceCube = dynamic(() => import("@/components/ice-cube"), {
   loading: () => (
     <Html>
       <p>Loading...</p>
@@ -31,36 +35,51 @@ const Smiley = dynamic(() => import("@/components/smiley"), {
 export interface GravityRectangleProps {}
 
 export default function GravityRectangle(props: GravityRectangleProps) {
-  const shapes = [
-    "heart",
-    "blink",
-    "blush",
-    "laugh",
-    "heart",
-    "blink",
-    "blush",
-    "laugh",
-    "heart",
-    "blink",
-    "blush",
-    "laugh",
-  ]
+  const icesMap = useLoader(THREE.TextureLoader, "/img/ices.png")
+  const [iceCount, setIceCount] = useState(10)
+  const envProps = useControls({ background: false })
 
   return (
-    <div className={cx(s.wrapper, "w-full h-full")}>
-      <Canvas orthographic camera={{ position: [0, 0, 10], zoom: 120 }}>
-        <ambientLight intensity={Math.PI * 1.5} />
+    <div className={cx(s.wrapper, "w-full h-full")} onClick={() => setIceCount((prev) => prev + 1)}>
+      <Canvas orthographic camera={{ position: [0, 0, 1], zoom: 100, fov: 50 }}>
+        {/* <color attach="background" args={["#ffffff"]} /> */}
+
         <Physics gravity={[0, -6, 0]}>
-          {Array.from({ length: shapes.length }, (v, i) => (
-            <Smiley
-              key={i}
-              which={shapes[i % shapes.length]}
-              position={[gsap.utils.random(-5, 5), gsap.utils.random(-5, 5), 0]}
-            />
+          {Array.from({ length: iceCount }, (v, i) => (
+            <IceCube key={i} scale={gsap.utils.random(0.3, 0.4)} />
           ))}
           <Walls />
-          {/* <Pointer /> */}
+          <Pointer />
         </Physics>
+
+        {/* <OrbitControls /> */}
+
+        <Float floatIntensity={0.5} floatingRange={[0, 0.5]} rotationIntensity={0.5} speed={2}>
+          <IceModel />
+        </Float>
+
+        <group rotation={[0, 0, Math.PI / 4]}>
+          <mesh position={[0, 0, -20]}>
+            <sphereGeometry args={[3, 8, 64]} />
+            <meshBasicMaterial color="#e4f6f8" side={THREE.DoubleSide} />
+          </mesh>
+          {/* <mesh position={[0, 0, -10]}>
+            <planeGeometry args={[2, 20]} />
+            <meshBasicMaterial color="#FF5B4A" side={THREE.DoubleSide} />
+          </mesh> */}
+        </group>
+
+        <Environment {...envProps} files="/hdr/adams_place_bridge_1k.hdr" />
+
+        <EffectComposer>
+          <N8AO aoRadius={3} distanceFalloff={3} intensity={1} />
+        </EffectComposer>
+
+        <ambientLight intensity={Math.PI * 1.5} />
+        <spotLight position={[20, 20, 10]} penumbra={1} castShadow angle={0.2} />
+        <pointLight position={[-10, -10, -10]} />
+
+        {/* <Rig /> */}
       </Canvas>
     </div>
   )
@@ -89,15 +108,18 @@ function Walls() {
 function Pointer({ vec = new Vector3() }) {
   const api = useRef<RapierRigidBody>(null)
 
-  useFrame(({ pointer, viewport }, delta) => {
-    easing.damp3(vec, [(pointer.x * viewport.width) / 2, (pointer.y * viewport.height) / 2, 0], 0, delta, Infinity)
-    api.current?.setNextKinematicTranslation(vec)
+  useFrame(({ pointer, viewport }) => {
+    const vectorX = (pointer.x * viewport.width) / 2
+    const vectorY = (pointer.y * viewport.height) / 2
+    const vectorZ = 0
+
+    api.current?.setNextKinematicTranslation({ x: vectorX, y: vectorY, z: vectorZ })
   })
 
   return (
     <RigidBody type="kinematicPosition" colliders="ball" ref={api}>
-      <Sphere receiveShadow castShadow args={[0.05]}>
-        <meshStandardMaterial color="hotpink" roughness={0} envMapIntensity={0.1} />
+      <Sphere args={[0.2]}>
+        <meshStandardMaterial color="#FF5B4A" />
       </Sphere>
     </RigidBody>
   )
@@ -139,7 +161,7 @@ function CircleColliders({ radius, segmentCount, height }: ColliderProps) {
       const y = radius * Math.sin(angle)
       return { position: new Vector3(x, y, 0), rotation: new Euler(0, angle, 0) }
     })
-  }, [radius, segmentCount, viewportWidth])
+  }, [radius, segmentCount])
 
   return (
     <>
@@ -151,4 +173,17 @@ function CircleColliders({ radius, segmentCount, height }: ColliderProps) {
       ))}
     </>
   )
+}
+
+function Rig() {
+  useFrame((state, delta) => {
+    easing.damp3(
+      state.camera.position,
+      [Math.sin(-state.pointer.x) * 5, state.pointer.y * 3.5, 15 + Math.cos(state.pointer.x) * 10],
+      0.2,
+      delta
+    )
+    state.camera.lookAt(0, 0, 0)
+  })
+  return null
 }
