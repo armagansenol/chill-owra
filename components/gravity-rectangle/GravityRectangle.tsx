@@ -1,5 +1,5 @@
 import { gsap } from "@/lib/gsap"
-import { Environment, Html, Sphere, Text } from "@react-three/drei"
+import { Environment, Html, OrbitControls, Sphere, Text } from "@react-three/drei"
 import { Canvas, extend, useFrame, useLoader, useThree } from "@react-three/fiber"
 import { EffectComposer, N8AO } from "@react-three/postprocessing"
 import { CuboidCollider, Physics, RapierRigidBody, RigidBody } from "@react-three/rapier"
@@ -32,35 +32,9 @@ export default function GravityRectangle(props: GravityRectangleProps) {
   return (
     <div className={cx(s.wrapper, "w-full h-full")}>
       <Canvas orthographic camera={{ position: [0, 0, 1], zoom: 100 }} frameloop="demand">
-        {/* <color attach="background" args={["#e4f6f8"]} /> */}
-
-        <Physics gravity={[0, 0, 0]}>
-          {Array.from({ length: 30 }, (v, i) => (
-            <IceCube
-              key={i}
-              scale={gsap.utils.random(0.3, 0.5, 0.001)}
-              position={new THREE.Vector3(gsap.utils.random(-5, 5), gsap.utils.random(-5, 5), 0)}
-            />
-          ))}
-          <Walls />
-          <Pointer />
-        </Physics>
+        <PhysicsIceCube />
 
         <IceModel />
-
-        <group rotation={[0, 0, 0]}>
-          <mesh position={[0, 0, -30]}>
-            <sphereGeometry args={[3, 10, 64]} />
-            <meshBasicMaterial color="#e4f6f8" side={THREE.DoubleSide} />
-          </mesh>
-        </group>
-
-        {/* <group rotation={[0, 0, 0]}>
-          <mesh position={[0, 0, -35]}>
-            <sphereGeometry args={[5, 10, 40]} />
-            <meshBasicMaterial color="#7CB9E8" side={THREE.DoubleSide} />
-          </mesh>
-        </group> */}
 
         <Text
           position={[0, 0, -10]}
@@ -69,25 +43,26 @@ export default function GravityRectangle(props: GravityRectangleProps) {
           color="#D9D9D9"
           anchorX="center"
           anchorY="middle"
-          strokeWidth={5}
-          strokeColor={"#E1E1E1"}
-          strokeOpacity={1}
         >
           {`Coming Soon`}
         </Text>
 
-        <Environment {...envProps} files="/hdr/adams_place_bridge_1k.hdr" />
+        <Environment
+          {...envProps}
+          preset="sunset"
+          environmentIntensity={0.8}
+          environmentRotation={new THREE.Euler(Math.PI * 1, 0, 0)}
+          blur={4.8}
+        />
 
         <EffectComposer>
           <N8AO aoRadius={3} distanceFalloff={3} intensity={1} />
-          {/* <Bloom mipmapBlur luminanceThreshold={1} intensity={2} /> */}
-          {/* <BrightnessContrast brightness={-0.1} contrast={0.9} /> */}
-          {/* <HueSaturation hue={0} saturation={-0.15} /> */}
         </EffectComposer>
 
-        <ambientLight intensity={Math.PI * 1.5} />
-        <spotLight position={[20, 20, 10]} penumbra={1} castShadow angle={0.2} />
+        <ambientLight intensity={Math.PI * 1} />
+        <spotLight position={[-20, -20, -20]} penumbra={1} castShadow angle={0.2} />
         <pointLight position={[-10, -10, -10]} />
+
         <Rig />
       </Canvas>
     </div>
@@ -113,8 +88,10 @@ function Walls() {
 function Pointer({ vec = new Vector3() }) {
   const api = useRef<RapierRigidBody>(null)
 
-  useFrame(({ pointer, viewport }, delta) => {
-    easing.damp3(vec, [(pointer.x * viewport.width) / 2, (pointer.y * viewport.height) / 2, 0], 0, delta, Infinity)
+  useFrame(({ pointer, viewport }) => {
+    const x = (pointer.x * viewport.width) / 2
+    const y = (pointer.y * viewport.height) / 2
+    vec.set(x, y, 0)
     api.current?.setNextKinematicTranslation(vec)
   })
 
@@ -138,4 +115,26 @@ function Rig() {
     state.camera.lookAt(0, 0, 0)
   })
   return null
+}
+
+function PhysicsIceCube() {
+  const { viewport } = useThree()
+
+  return (
+    <>
+      {viewport.width > 1 && (
+        <Physics gravity={[0, 0, 0]}>
+          {Array.from({ length: 30 }, (v, i) => (
+            <IceCube
+              key={i}
+              scale={gsap.utils.random(0.3, 0.5, 0.001)}
+              position={new THREE.Vector3(gsap.utils.random(-5, 5), gsap.utils.random(-5, 5), 0)}
+            />
+          ))}
+          <Walls />
+          <Pointer />
+        </Physics>
+      )}
+    </>
+  )
 }

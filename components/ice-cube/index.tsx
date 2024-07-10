@@ -88,25 +88,15 @@ export default function IceCube(props: Props) {
       >
         <Float floatIntensity={2}>
           <group dispose={null} ref={meshRef}>
-            <mesh castShadow geometry={nodes.pCube1.geometry} rotation={[-Math.PI, 0, 0]}>
+            <mesh geometry={nodes.pCube1.geometry} rotation={[-Math.PI, 0, 0]}>
               <MeshTransmissionMaterial
                 {...materialProps}
                 map={texture}
-                // bumpMap={bump}
-                // bumpScale={1.3}
-                displacementMap={bump}
+                displacementMap={texture}
                 displacementScale={0.1}
-                opacity={0.5}
+                opacity={0.45}
                 transparent={true}
               />
-              {/* <meshPhongMaterial
-                  map={texture}
-                  // displacementMap={texture}
-                  // displacementScale={0.1}
-                  transparent={true}
-                  opacity={0.6}
-                /> */}
-              {/* <meshStandardMaterial map={texture} /> */}
               <CuboidCollider args={[1, 1, 1]} />
             </mesh>
           </group>

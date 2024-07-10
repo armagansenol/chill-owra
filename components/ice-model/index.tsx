@@ -1,11 +1,9 @@
-import { MeshTransmissionMaterial, useGLTF } from "@react-three/drei"
-import { extend, useFrame, useLoader } from "@react-three/fiber"
+import { Caustics, MeshTransmissionMaterial, useGLTF } from "@react-three/drei"
+import { useFrame, useLoader, useThree } from "@react-three/fiber"
 import { useControls } from "leva"
 import { useMemo, useRef } from "react"
 import * as THREE from "three"
 import { GLTF } from "three-stdlib"
-
-extend({ MeshTransmissionMaterial })
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -48,38 +46,46 @@ type GLTFResult = GLTF & {
 
 export function IceModel(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF("/glb/bardak.glb") as GLTFResult
+  const meshRef = useRef<THREE.Group>(null)
+
+  const { viewport } = useThree()
 
   const texture = useLoader(THREE.TextureLoader, "/img/ice-texture.jpg")
   const packageMap = useLoader(THREE.TextureLoader, "/img/chill-owra-package.png")
+  const bump = useLoader(THREE.TextureLoader, "/img/ice-bump.jpg")
 
   useMemo(() => {
+    const vec2 = new THREE.Vector2(1, 1)
     texture.wrapS = THREE.RepeatWrapping
     texture.wrapT = THREE.RepeatWrapping
-    texture.repeat.set(1, 1) // Adjust this to control the number of repetitions
-  }, [texture])
+    texture.repeat.set(vec2.x, vec2.y)
 
-  const materialProps = useControls({
+    bump.wrapS = THREE.RepeatWrapping
+    bump.wrapT = THREE.RepeatWrapping
+    bump.repeat.set(vec2.x, vec2.y)
+  }, [texture, bump])
+
+  const innerCubeMaterialProps = useControls({
     transmissionSampler: true,
-    backside: true,
-    samples: { value: 10, min: 1, max: 32, step: 1 },
-    resolution: { value: 1024, min: 256, max: 2048, step: 256 },
+    samples: { value: 4, min: 1, max: 32, step: 1 },
+    resolution: { value: 512, min: 256, max: 2048, step: 256 },
     transmission: { value: 1, min: 0, max: 1 },
     roughness: { value: 0.0, min: 0, max: 1, step: 0.01 },
-    thickness: { value: 3.5, min: 0, max: 10, step: 0.01 },
+    thickness: { value: 1, min: 0, max: 10, step: 0.01 },
     ior: { value: 1.5, min: 1, max: 5, step: 0.01 },
-    chromaticAberration: { value: 0.06, min: 0, max: 1 },
+    chromaticAberration: { value: 0.025, min: 0, max: 1 },
     anisotropy: { value: 0.1, min: 0, max: 1, step: 0.01 },
-    distortion: { value: 0.0, min: 0, max: 1, step: 0.01 },
-    distortionScale: { value: 0.3, min: 0.01, max: 1, step: 0.01 },
-    temporalDistortion: { value: 0.5, min: 0, max: 1, step: 0.01 },
-    clearcoat: { value: 1, min: 0, max: 1 },
+    distortion: { value: 0.1, min: 0, max: 1, step: 0.01 },
+    distortionScale: { value: 0.1, min: 0.01, max: 1, step: 0.01 },
+    temporalDistortion: { value: 0.2, min: 0, max: 1, step: 0.01 },
+    clearcoat: { value: 0, min: 0, max: 1 },
     attenuationDistance: { value: 0.5, min: 0, max: 10, step: 0.01 },
-    // attenuationColor: "#ffffff",
-    // color: "#c9ffa1",
-    // bg: "#839681",
+    attenuationColor: "#e4f6f8",
+    color: "#e4f6f8",
+    bg: "#e4f6f8",
+    // opacity: 0.25,
+    // transparent: true,
   })
-
-  const meshRef = useRef<any>()
 
   useFrame(() => {
     if (meshRef.current) {
@@ -90,7 +96,13 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
   })
 
   return (
-    <group {...props} dispose={null} scale={0.02} position={[0, -2.75, -5]} ref={meshRef}>
+    <group
+      {...props}
+      dispose={null}
+      ref={meshRef}
+      scale={viewport.width > 1 ? 0.0011 * viewport.width : 0.0259 * viewport.width}
+      position={[0, viewport.width > 1 ? -0.14 * viewport.width : -0.325 * viewport.width, -5]}
+    >
       <group>
         {/* ice cubes */}
         <group
@@ -106,14 +118,13 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
-                  castShadow
-                  receiveShadow
+                  frustumCulled={false}
                   geometry={nodes["pCube1-mesh"].geometry}
                   position={[4.77869025, 8.33988007, -2.93984335]}
                   rotation={[0.36461895, -0.22149031, 0.9556353]}
                   scale={[0.99999972, 1.00000003, 1.00000019]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} bumpMap={texture} bumpScale={4.8} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -126,14 +137,13 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
-                  castShadow
-                  receiveShadow
+                  frustumCulled={false}
                   geometry={nodes["pCube1-mesh_1"].geometry}
                   position={[-3.78540198, 7.85727021, -2.40549208]}
                   rotation={[0.69971642, 0.76042812, 2.84765694]}
                   scale={[0.9999999, 0.99999994, 0.99999982]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -146,14 +156,13 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
-                  castShadow
-                  receiveShadow
+                  frustumCulled={false}
                   geometry={nodes["pCube1-mesh_2"].geometry}
                   position={[-1.56717739, 6.66600564, -5.76584721]}
                   rotation={[1.54993564, 1.29283338, 3.01026538]}
                   scale={[0.99999985, 0.9999997, 1.00000024]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -166,15 +175,14 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
-                  castShadow
-                  receiveShadow
+                  frustumCulled={false}
                   geometry={nodes["pCube1-mesh_3"].geometry}
                   material={materials["bus #3"]}
                   position={[1.57180323, 4.36639243, -7.304711]}
                   rotation={[-0.27664154, 1.1078338, -0.221704]}
                   scale={[1.00000016, 1.00000021, 1.00000027]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -187,14 +195,13 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
-                  castShadow
-                  receiveShadow
+                  frustumCulled={false}
                   geometry={nodes["pCube1-mesh_4"].geometry}
                   position={[-0.86380866, 7.18127366, -4.87157994]}
                   rotation={[-1.07742939, 1.3779754, 2.74543045]}
                   scale={[0.99999995, 0.99999993, 0.99999986]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -207,14 +214,13 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
-                  castShadow
-                  receiveShadow
+                  frustumCulled={false}
                   geometry={nodes["pCube1-mesh_5"].geometry}
                   position={[-0.04234855, 8.60382593, -3.71624693]}
                   rotation={[-3.0491177, 0.23356668, 0.51936721]}
                   scale={[0.9999999, 1.00000017, 1.00000009]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -227,15 +233,14 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
-                  castShadow
-                  receiveShadow
+                  frustumCulled={false}
                   geometry={nodes["pCube1-mesh_6"].geometry}
                   material={materials["bus #4"]}
                   position={[5.37501257, 20.76267624, -6.03138388]}
                   rotation={[1.80077345, -0.71495445, 2.52940719]}
                   scale={[1.00000013, 1.00000015, 1.00000025]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -248,14 +253,13 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
-                  castShadow
-                  receiveShadow
+                  frustumCulled={false}
                   geometry={nodes["pCube1-mesh_7"].geometry}
                   position={[3.9031161, 22.7521046, -6.8716689]}
                   rotation={[0.14285985, 0.20797873, -1.91430372]}
                   scale={[1.00000049, 1.0000006, 1.0000004]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -268,14 +272,13 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
-                  castShadow
-                  receiveShadow
+                  frustumCulled={false}
                   geometry={nodes["pCube1-mesh_8"].geometry}
                   position={[3.4597084, 27.11127848, -3.95665172]}
                   rotation={[-1.06272036, -0.80080873, 0.41966276]}
                   scale={[0.99999939, 0.99999977, 0.99999938]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -288,14 +291,13 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
-                  castShadow
-                  receiveShadow
+                  frustumCulled={false}
                   geometry={nodes["pCube1-mesh_9"].geometry}
                   position={[4.79398532, 22.9032723, -4.39598398]}
                   rotation={[-0.14279437, -0.85964999, 1.06658227]}
                   scale={[1.00000036, 1.00000002, 1.0000003]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -308,14 +310,13 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
-                  castShadow
-                  receiveShadow
+                  frustumCulled={false}
                   geometry={nodes["pCube1-mesh_10"].geometry}
                   position={[3.45934046, 24.22309125, -7.02739054]}
                   rotation={[1.17127847, 0.610312, 1.01464035]}
                   scale={[1.00000005, 1.00000005, 1.00000022]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -328,14 +329,13 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
-                  castShadow
-                  receiveShadow
+                  frustumCulled={false}
                   geometry={nodes["pCube1-mesh_11"].geometry}
                   position={[-0.00977291, 20.77246279, -5.09957169]}
                   rotation={[-3.02814977, -0.31550422, -2.57438133]}
                   scale={[1.00000006, 1.00000013, 1.00000021]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -348,6 +348,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
+                  frustumCulled={false}
                   castShadow
                   receiveShadow
                   geometry={nodes["pCube1-mesh_12"].geometry}
@@ -355,7 +356,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                   rotation={[-2.7599163, -0.60163167, 2.90486386]}
                   scale={[1.00000011, 1.00000042, 1.00000051]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -368,6 +369,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
             <group scale={0.001}>
               <group position={[2.3003099, 0.02521, 0.183025]}>
                 <mesh
+                  frustumCulled={false}
                   castShadow
                   receiveShadow
                   geometry={nodes["pCube1-mesh_13"].geometry}
@@ -375,7 +377,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                   rotation={[-2.41580988, -0.80181023, -1.34521012]}
                   scale={[0.99999997, 0.99999986, 0.99999975]}
                 >
-                  <MeshTransmissionMaterial {...materialProps} />
+                  <MeshTransmissionMaterial {...innerCubeMaterialProps} />
                 </mesh>
               </group>
             </group>
@@ -384,60 +386,58 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
         {/* ice cubes */}
 
         <mesh
-          castShadow
-          receiveShadow
           geometry={nodes.CUsersberkaOneDriveMasaüstüBardak_Altobj.geometry}
           position={[1.3753624, -79.21138, 0]}
+          frustumCulled={false}
         >
           <MeshTransmissionMaterial
             transmissionSampler={true}
             samples={4}
-            resolution={512}
             transmission={1}
-            roughness={0}
-            thickness={0}
-            ior={5}
-            chromaticAberration={0.05}
-            anisotropy={0.1}
-            distortion={0.5}
-            distortionScale={0.5}
-            temporalDistortion={0.2}
-            clearcoat={1}
+            ior={3}
             backside={false}
+            backsideThickness={0.1}
+            thickness={0.05}
+            chromaticAberration={0.05}
+            anisotropicBlur={1}
+            clearcoat={0}
+            clearcoatRoughness={1}
+            envMapIntensity={2}
+            opacity={0.65}
+            transparent={true}
           />
         </mesh>
 
         <mesh
-          castShadow
-          receiveShadow
           geometry={nodes.CUsersberkaOneDriveMasaüstüBardak_Ustobj.geometry}
           position={[1.37532806, -83.60058784, 0.00108719]}
+          frustumCulled={false}
         >
           <MeshTransmissionMaterial
             transmissionSampler={true}
             samples={4}
-            resolution={512}
             transmission={1}
-            roughness={0}
-            thickness={0}
-            ior={5}
-            chromaticAberration={0.05}
-            anisotropy={0.1}
-            distortion={0.5}
-            distortionScale={0.5}
-            temporalDistortion={0.2}
-            clearcoat={1}
+            ior={3}
             backside={false}
+            backsideThickness={0.1}
+            thickness={0.05}
+            chromaticAberration={0.05}
+            anisotropicBlur={1}
+            clearcoat={0}
+            clearcoatRoughness={1}
+            envMapIntensity={2}
+            opacity={0.65}
+            transparent={true}
           />
         </mesh>
 
         <mesh
-          castShadow
-          receiveShadow
-          geometry={new THREE.CylinderGeometry(81, 54, 195, 32)}
+          castShadow={false}
+          receiveShadow={false}
+          geometry={new THREE.CylinderGeometry(83, 54, 195, 32)}
           position={[1.3753624, 98, 0]}
         >
-          <meshBasicMaterial map={packageMap} transparent={true} />
+          <meshBasicMaterial map={packageMap} transparent={true} opacity={1} />
         </mesh>
       </group>
     </group>
