@@ -1,0 +1,69 @@
+.button {
+  @include dims(desktop-vw(230px), desktop-vw(52px));
+  background-color: var(--science-blue);
+  border-radius: desktop-vw(10px);
+  color: var(--white);
+  padding: 0 desktop-vw(12px);
+  font-family: var(--font-fustat);
+  font-weight: 700;
+
+  .iconC {
+    @include dims(desktop-vw(28px));
+  }
+}
+
+.modalContent {
+  @include dims(desktop-vw(700px), auto);
+  background: var(--science-blue);
+  border-radius: desktop-vw(10px);
+  padding: desktop-vw(32px);
+
+  .header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.23);
+    padding-bottom: desktop-vw(14px);
+
+    .title {
+      color: var(--white);
+      font-family: var(--font-fustat);
+      font-size: desktop-vw(36px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .iconC {
+      @include dims(desktop-vw(20px));
+    }
+  }
+
+  .content {
+    padding-top: desktop-vw(16px);
+
+    > p {
+      @include dims(desktop-vw(410px), auto);
+      color: var(--white);
+      font-family: var(--font-fustat);
+      font-size: desktop-vw(24px);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      margin-bottom: desktop-vw(50px);
+    }
+
+    > button {
+      background-color: var(--white);
+      border-radius: desktop-vw(10px);
+      color: var(--science-blue);
+      font-family: var(--font-fustat);
+      font-size: desktop-vw(24px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: desktop-vw(50px);
+      padding: desktop-vw(12px) desktop-vw(12px);
+    }
+  }
+
+  .iceC {
+    @include position(absolute, auto, 0, 0, auto);
+    @include dims(desktop-vw(450px), desktop-vw(360px));
+    transform: translate(desktop-vw(-250px), desktop-vw(-100px));
+  }
+}
