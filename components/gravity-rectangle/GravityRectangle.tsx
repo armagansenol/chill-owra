@@ -120,9 +120,13 @@ function Rig() {
 function PhysicsIceCube() {
   const { viewport } = useThree()
 
+  const vw = viewport.width * 100
+
+  console.log(vw)
+
   return (
     <>
-      {viewport.width > 1 && (
+      {vw > 1024 && (
         <Physics gravity={[0, 0, 0]}>
           {Array.from({ length: 30 }, (v, i) => (
             <IceCube

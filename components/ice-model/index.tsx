@@ -1,4 +1,4 @@
-import { Caustics, MeshTransmissionMaterial, useGLTF } from "@react-three/drei"
+import { MeshTransmissionMaterial, useGLTF } from "@react-three/drei"
 import { useFrame, useLoader, useThree } from "@react-three/fiber"
 import { useControls } from "leva"
 import { useMemo, useRef } from "react"
@@ -49,6 +49,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
   const meshRef = useRef<THREE.Group>(null)
 
   const { viewport } = useThree()
+  const vw = viewport.width * 100
 
   const texture = useLoader(THREE.TextureLoader, "/img/ice-texture.jpg")
   const packageMap = useLoader(THREE.TextureLoader, "/img/chill-owra-package.png")
@@ -100,8 +101,9 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
       {...props}
       dispose={null}
       ref={meshRef}
-      scale={viewport.width > 1 ? 0.0011 * viewport.width : 0.0259 * viewport.width}
-      position={[0, viewport.width > 1 ? -0.14 * viewport.width : -0.325 * viewport.width, -5]}
+      scale={vw > 1024 ? 0.02 : 0.013}
+      position={[0, vw > 1024 ? -2.5 : -2, -5]}
+      rotation={[0, Math.PI * 0.35, 0]}
     >
       <group>
         {/* ice cubes */}
