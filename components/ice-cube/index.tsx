@@ -25,19 +25,19 @@ export default function IceCube(props: Props) {
   const { nodes } = useGLTF("/glb/ice-origin-center.glb") as GLTFResult
   const meshRef = React.useRef<any>(null)
 
-  const texture = useLoader(THREE.TextureLoader, "/img/ice-texture.jpg")
+  const tex = useLoader(THREE.TextureLoader, "/img/ice-texture.jpg")
   const bump = useLoader(THREE.TextureLoader, "/img/ice-bump.jpg")
 
   React.useMemo(() => {
     const vec2 = new THREE.Vector2(1, 1)
-    texture.wrapS = THREE.RepeatWrapping
-    texture.wrapT = THREE.RepeatWrapping
-    texture.repeat.set(vec2.x, vec2.y)
+    tex.wrapS = THREE.RepeatWrapping
+    tex.wrapT = THREE.RepeatWrapping
+    tex.repeat.set(vec2.x, vec2.y)
 
     bump.wrapS = THREE.RepeatWrapping
     bump.wrapT = THREE.RepeatWrapping
     bump.repeat.set(vec2.x, vec2.y)
-  }, [texture, bump])
+  }, [tex, bump])
 
   const materialProps = useControls("floatingIceCubes", {
     backside: false,
@@ -87,8 +87,8 @@ export default function IceCube(props: Props) {
             <mesh geometry={nodes.pCube1.geometry} rotation={[-Math.PI, 0, 0]}>
               <MeshTransmissionMaterial
                 {...materialProps}
-                map={texture}
-                displacementMap={texture}
+                map={tex}
+                displacementMap={tex}
                 displacementScale={0.1}
                 opacity={0.45}
                 transparent={true}

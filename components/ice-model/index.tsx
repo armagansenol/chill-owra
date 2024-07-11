@@ -51,20 +51,20 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
   const { viewport } = useThree()
   const vw = viewport.width * 100
 
-  const texture = useLoader(THREE.TextureLoader, "/img/ice-texture.jpg")
+  const tex = useLoader(THREE.TextureLoader, "/img/ice-texture.jpg")
   const packageMap = useLoader(THREE.TextureLoader, "/img/chill-owra-package.png")
   const bump = useLoader(THREE.TextureLoader, "/img/ice-bump.jpg")
 
   useMemo(() => {
     const vec2 = new THREE.Vector2(3, 3)
-    texture.wrapS = THREE.RepeatWrapping
-    texture.wrapT = THREE.RepeatWrapping
-    texture.repeat.set(vec2.x, vec2.y)
+    tex.wrapS = THREE.RepeatWrapping
+    tex.wrapT = THREE.RepeatWrapping
+    tex.repeat.set(vec2.x, vec2.y)
 
     bump.wrapS = THREE.RepeatWrapping
     bump.wrapT = THREE.RepeatWrapping
     bump.repeat.set(vec2.x, vec2.y)
-  }, [texture, bump])
+  }, [tex, bump])
 
   const materialProps = useControls("cup", {
     attenuationColor: "#e4f6f8",
@@ -136,8 +136,8 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     rotation={[0.36461895, -0.22149031, 0.9556353]}
                     scale={[0.99999972, 1.00000003, 1.00000019]}
                   >
-                    {/* <MeshTransmissionMaterial {...cubeMaterialProps} map={texture} /> */}
-                    <meshBasicMaterial map={texture} {...cubeMaterialProps} />
+                    {/* <MeshTransmissionMaterial {...cubeMaterialProps} map={tex} /> */}
+                    <meshBasicMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -157,7 +157,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[0.9999999, 0.99999994, 0.99999982]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -177,7 +177,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[0.99999985, 0.9999997, 1.00000024]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -198,7 +198,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[1.00000016, 1.00000021, 1.00000027]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -218,7 +218,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[0.99999995, 0.99999993, 0.99999986]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -238,7 +238,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[0.9999999, 1.00000017, 1.00000009]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -259,7 +259,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[1.00000013, 1.00000015, 1.00000025]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -279,7 +279,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[1.00000049, 1.0000006, 1.0000004]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -299,7 +299,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[0.99999939, 0.99999977, 0.99999938]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -319,7 +319,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[1.00000036, 1.00000002, 1.0000003]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -339,7 +339,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[1.00000005, 1.00000005, 1.00000022]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -359,7 +359,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[1.00000006, 1.00000013, 1.00000021]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -381,7 +381,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[1.00000011, 1.00000042, 1.00000051]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
@@ -403,7 +403,7 @@ export function IceModel(props: JSX.IntrinsicElements["group"]) {
                     scale={[0.99999997, 0.99999986, 0.99999975]}
                   >
                     {/* <MeshTransmissionMaterial {...cubeMaterialProps} /> */}
-                    <meshPhysicalMaterial map={texture} {...cubeMaterialProps} />
+                    <meshPhysicalMaterial map={tex} {...cubeMaterialProps} />
                   </mesh>
                 </group>
               </group>
