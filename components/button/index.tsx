@@ -24,14 +24,14 @@ export default function Button(props: ButtonProps) {
             </span>
           </div>
 
-          <div className={s.content}>
+          <div className={cx(s.content, "flex flex-col items-center tablet:items-start")}>
             <p>If you’re craving your favorite frozen concoction, drop us an email.</p>
             <p>We promise it’s worth the brain freeze!</p>
             <button>Drop a Line & Chill</button>
           </div>
 
           <div className={s.iceC}>
-            <Img alt="Ice Cube Sitting" src={iceSitting} height={500} width={500} />
+            <Img alt="Ice Cube Sitting" src={iceSitting} height={500} width={500} className="object-contain" />
           </div>
         </div>
       </>
@@ -39,10 +39,10 @@ export default function Button(props: ButtonProps) {
   }
   return (
     <button
-      className={cx(s.button, "flex items-center justify-between pointer-events-auto cursor-pointer")}
+      className={cx(s.button, "flex flex-row items-center justify-between pointer-events-auto cursor-pointer")}
       onClick={handleModal}
     >
-      <span>Feeling Thirsty</span>
+      <span>Feeling Thirsty?</span>
       <span className={s.iconC}>
         <IconCursorClick />
       </span>

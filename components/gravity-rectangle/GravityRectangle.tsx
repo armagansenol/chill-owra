@@ -1,18 +1,17 @@
 import { gsap } from "@/lib/gsap"
-import { Environment, Html, OrbitControls, Sphere, Text } from "@react-three/drei"
-import { Canvas, extend, useFrame, useLoader, useThree } from "@react-three/fiber"
-import { EffectComposer, N8AO } from "@react-three/postprocessing"
-import { CuboidCollider, Physics, RapierRigidBody, RigidBody } from "@react-three/rapier"
+import { Environment, Html, Lightformer, OrthographicCamera, Text } from "@react-three/drei"
+import { Canvas, extend, useFrame, useThree } from "@react-three/fiber"
+import { BallCollider, CuboidCollider, Physics, RapierRigidBody, RigidBody } from "@react-three/rapier"
 import cx from "clsx"
-import { useControls } from "leva"
+import { Leva } from "leva"
 import { easing } from "maath"
 import dynamic from "next/dynamic"
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import * as THREE from "three"
-import { AmbientLight, SpotLight, Vector3 } from "three"
+import { AmbientLight, SpotLight } from "three"
+import { IceModel } from "../ice-model"
 import { LoadingSpinner } from "../utility/loading-spinner"
 import s from "./three-fiber-ultia.module.scss"
-import { IceModel } from "../ice-model"
 extend({ AmbientLight, SpotLight })
 
 const IceCube = dynamic(() => import("@/components/ice-cube"), {
@@ -27,44 +26,72 @@ const IceCube = dynamic(() => import("@/components/ice-cube"), {
 export interface GravityRectangleProps {}
 
 export default function GravityRectangle(props: GravityRectangleProps) {
-  const envProps = useControls({ background: false })
-
   return (
     <div className={cx(s.wrapper, "w-full h-full")}>
-      <Canvas orthographic camera={{ position: [0, 0, 1], zoom: 100 }} frameloop="demand">
-        <PhysicsIceCube />
+      <Canvas frameloop="always">
+        {/* <PerspectiveCamera makeDefault position={[0, 0, 180]} near={0.1} fov={52} /> */}
+        <OrthographicCamera makeDefault position={[0, 0, 1]} near={0.1} zoom={60} />
+        {/* <Camera /> */}
+
+        <color attach="background" args={["white"]} />
 
         <IceModel />
 
-        <Text
-          position={[0, 0, -10]}
-          font="/fonts/dela-gothic-one/DelaGothicOne-Regular.ttf"
-          fontSize={1.5}
-          color="#D9D9D9"
-          anchorX="center"
-          anchorY="middle"
-        >
-          {`Coming Soon`}
-        </Text>
+        <PhysicsIceCube />
+
+        <CanvasText />
 
         <Environment
-          {...envProps}
+          background={false}
           preset="sunset"
-          environmentIntensity={0.8}
+          environmentIntensity={0.2}
           environmentRotation={new THREE.Euler(Math.PI * 1, 0, 0)}
-          blur={4.8}
-        />
+          blur={64.8}
+        >
+          <Lightformer
+            position={[5, 0, -5]}
+            form="rect" // circle | ring | rect (optional, default = rect)
+            intensity={10} // power level (optional = 1)
+            color="#0075ce" // (optional = white)
+            scale={[3, 5, 0]} // Scale it any way you prefer (optional = [1, 1])
+            target={[0, 0, 0]}
+          />
 
-        <EffectComposer>
-          <N8AO aoRadius={3} distanceFalloff={3} intensity={1} />
-        </EffectComposer>
+          <Lightformer
+            position={[-5, 0, 1]}
+            form="circle" // circle | ring | rect (optional, default = rect)
+            intensity={10} // power level (optional = 1)
+            color="#0075ce" // (optional = white)
+            scale={[2, 5, 0]} // Scale it any way you prefer (optional = [1, 1])
+            target={[0, 0, 0]}
+          />
 
-        <ambientLight intensity={Math.PI * 1} />
-        <spotLight position={[-20, -20, -20]} penumbra={1} castShadow angle={0.2} />
-        <pointLight position={[-10, -10, -10]} />
+          <Lightformer
+            position={[0, 5, -2]}
+            form="ring" // circle | ring | rect (optional, default = rect)
+            intensity={10} // power level (optional = 1)
+            color="#0075ce" // (optional = white)
+            scale={[10, 5, 0]} // Scale it any way you prefer (optional = [1, 1])
+            target={[0, 0, 0]}
+          />
+          <Lightformer
+            position={[0, 0, 5]}
+            form="rect" // circle | ring | rect (optional, default = rect)
+            intensity={10} // power level (optional = 1)
+            color="#0075ce" // (optional = white)
+            scale={[10, 5, 0]} // Scale it any way you prefer (optional = [1, 1])
+            target={[0, 0, 0]}
+          />
+        </Environment>
+
+        <ambientLight intensity={Math.PI * 2} />
+        {/* <spotLight position={[-20, -20, -20]} penumbra={1} castShadow angle={0.2} /> */}
+        {/* <pointLight position={[-10, -10, -10]} /> */}
+        {/* <directionalLight intensity={4} position={[0, 2, 3]} /> */}
 
         <Rig />
       </Canvas>
+      <Leva hidden={true} />
     </div>
   )
 }
@@ -85,30 +112,60 @@ function Walls() {
   )
 }
 
-function Pointer({ vec = new Vector3() }) {
+function Pointer({ vec = new THREE.Vector3() }) {
   const api = useRef<RapierRigidBody>(null)
 
   useFrame(({ pointer, viewport }) => {
-    const x = (pointer.x * viewport.width) / 2
-    const y = (pointer.y * viewport.height) / 2
-    vec.set(x, y, 0)
-    api.current?.setNextKinematicTranslation(vec)
+    api.current?.setNextKinematicTranslation(
+      vec.set((pointer.x * viewport.width) / 2, (pointer.y * viewport.height) / 2, 0)
+    )
   })
 
   return (
-    <RigidBody type="kinematicPosition" colliders="ball" ref={api}>
-      <Sphere args={[0.2]}>
+    <RigidBody position={[0, 0, 0]} type="kinematicPosition" colliders={false} ref={api}>
+      {/* <Sphere args={[0.2]}>
         <meshStandardMaterial color="#FF5B4A" />
-      </Sphere>
+      </Sphere> */}
+      <BallCollider args={[1]} />
     </RigidBody>
   )
 }
 
+function PhysicsIceCube() {
+  const { viewport } = useThree()
+  const vw = viewport.width * 100
+
+  return (
+    <>
+      <Physics gravity={[0, 0, 0]}>
+        {vw > 1024 && (
+          <>
+            {Array.from({ length: 30 }, (v, i) => (
+              <IceCube
+                key={i}
+                scale={gsap.utils.random(0.5, 0.8, 0.001)}
+                position={new THREE.Vector3(gsap.utils.random(-5, 5), gsap.utils.random(-5, 5), 0)}
+              />
+            ))}
+          </>
+        )}
+        <Walls />
+        <Pointer />
+      </Physics>
+    </>
+  )
+}
+
 function Rig() {
+  const { viewport } = useThree()
+  const vw = viewport.width * 100
+
   useFrame((state, delta) => {
+    if (vw <= 1024) return
+
     easing.damp3(
       state.camera.position,
-      [Math.sin(-state.pointer.x) / 2, state.pointer.y / 2, 15 + Math.cos(state.pointer.x) / 2],
+      [Math.sin(-state.pointer.x) / 2, state.pointer.y / 2, 10 + Math.cos(state.pointer.x) / 2],
       0.2,
       delta
     )
@@ -117,28 +174,23 @@ function Rig() {
   return null
 }
 
-function PhysicsIceCube() {
+function CanvasText() {
   const { viewport } = useThree()
-
   const vw = viewport.width * 100
-
-  console.log(vw)
 
   return (
     <>
-      {vw > 1024 && (
-        <Physics gravity={[0, 0, 0]}>
-          {Array.from({ length: 30 }, (v, i) => (
-            <IceCube
-              key={i}
-              scale={gsap.utils.random(0.3, 0.5, 0.001)}
-              position={new THREE.Vector3(gsap.utils.random(-5, 5), gsap.utils.random(-5, 5), 0)}
-            />
-          ))}
-          <Walls />
-          <Pointer />
-        </Physics>
-      )}
+      <Text
+        position={[0, vw > 1024 ? 0 : 0.5, -10]}
+        font="/fonts/dela-gothic-one/DelaGothicOne-Regular.ttf"
+        fontSize={vw > 1024 ? 2.5 : 0.75}
+        color="#D9D9D9"
+        anchorX="center"
+        anchorY="middle"
+        fillOpacity={0.5}
+      >
+        {`Coming Soon`}
+      </Text>
     </>
   )
 }

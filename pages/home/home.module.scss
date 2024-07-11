@@ -7,15 +7,8 @@
       @include dims(desktop-vw(215px), desktop-vw(56px));
 
       @include mobile {
-        @include dims(mobile-vw(115px), mobile-vw(26px));
+        @include dims(mobile-vw(150px), mobile-vw(40px));
       }
-    }
-  }
-
-  .comingSoon {
-    .iconC {
-      @include dims(auto, desktop-vw(170px));
-      margin: 0 desktop-vw(100px);
     }
   }
 }

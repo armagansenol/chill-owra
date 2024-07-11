@@ -18,8 +18,6 @@
   --upcoming-accordion-height: #{desktop-vw(30px)};
   --nav-height: #{desktop-vw(50px)};
 
-  --font-fustat: Fustat;
-
   @include mobile {
     --header-height: #{mobile-vw(120px)};
     --page-padding-top: #{mobile-vw(30px)};

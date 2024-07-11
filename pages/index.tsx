@@ -26,13 +26,13 @@ export default function Home() {
         </ClientOnly>
       </div>
 
-      <header className={cx(s.header, "flex items-center justify-between pointer-events-none z-20 relative")}>
-        <button className={cx(s.button, "opacity-0 pointer-events-none")}>Feeling Thirsty</button>
+      <header className={cx(s.header, "flex items-center justify-center pointer-events-none z-20 relative")}>
         <div className={s.logoC}>
           <OwraLogo />
         </div>
-        <Button />
       </header>
+
+      <Button />
     </div>
   )
 }

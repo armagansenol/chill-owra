@@ -1,5 +1,3 @@
-import { gsap } from "@/lib/gsap"
-import { useTransition } from "@react-spring/three"
 import { Float, MeshTransmissionMaterial, useGLTF } from "@react-three/drei"
 import { useFrame, useLoader } from "@react-three/fiber"
 import { CuboidCollider, RapierRigidBody, RigidBody } from "@react-three/rapier"
@@ -41,19 +39,17 @@ export default function IceCube(props: Props) {
     bump.repeat.set(vec2.x, vec2.y)
   }, [texture, bump])
 
-  const materialProps = useControls({
+  const materialProps = useControls("floatingIceCubes", {
+    backside: false,
     transmissionSampler: true,
     samples: { value: 4, min: 1, max: 32, step: 1 },
     resolution: { value: 512, min: 256, max: 2048, step: 256 },
     transmission: { value: 1, min: 0, max: 1 },
     roughness: { value: 0.0, min: 0, max: 1, step: 0.01 },
     thickness: { value: 1, min: 0, max: 10, step: 0.01 },
-    ior: { value: 1.5, min: 1, max: 5, step: 0.01 },
+    ior: { value: 2.5, min: 1, max: 5, step: 0.01 },
     chromaticAberration: { value: 0.025, min: 0, max: 1 },
     anisotropy: { value: 0.1, min: 0, max: 1, step: 0.01 },
-    distortion: { value: 0.1, min: 0, max: 1, step: 0.01 },
-    distortionScale: { value: 0.1, min: 0.01, max: 1, step: 0.01 },
-    temporalDistortion: { value: 0.2, min: 0, max: 1, step: 0.01 },
     clearcoat: { value: 1, min: 0, max: 1 },
     attenuationDistance: { value: 0.5, min: 0, max: 10, step: 0.01 },
     attenuationColor: "#e4f6f8",

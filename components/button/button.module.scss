@@ -1,4 +1,5 @@
 .button {
+  @include position(fixed, desktop-vw(40px), desktop-vw(40px), auto, auto);
   @include dims(desktop-vw(230px), desktop-vw(52px));
   background-color: var(--science-blue);
   border-radius: desktop-vw(10px);
@@ -6,9 +7,22 @@
   padding: 0 desktop-vw(12px);
   font-family: var(--font-fustat);
   font-weight: 700;
+  z-index: 10000;
+
+  @include mobile {
+    @include position(fixed, auto, auto, 6%, 50%);
+    @include dims(mobile-vw(230px), mobile-vw(52px));
+    border-radius: mobile-vw(10px);
+    padding: 0 mobile-vw(12px);
+    transform: translateX(-50%);
+  }
 
   .iconC {
     @include dims(desktop-vw(28px));
+
+    @include mobile {
+      @include dims(mobile-vw(28px));
+    }
   }
 }
 
@@ -18,9 +32,19 @@
   border-radius: desktop-vw(10px);
   padding: desktop-vw(32px);
 
+  @include mobile {
+    @include dims(mobile-vw(350px), auto);
+    border-radius: mobile-vw(10px);
+    padding: mobile-vw(16px);
+  }
+
   .header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.23);
     padding-bottom: desktop-vw(14px);
+
+    @include mobile {
+      padding-bottom: mobile-vw(14px);
+    }
 
     .title {
       color: var(--white);
@@ -28,15 +52,27 @@
       font-size: desktop-vw(36px);
       font-weight: 700;
       letter-spacing: -0.03em;
+
+      @include mobile {
+        font-size: mobile-vw(24px);
+      }
     }
 
     .iconC {
       @include dims(desktop-vw(20px));
+
+      @include mobile {
+        @include dims(mobile-vw(16px));
+      }
     }
   }
 
   .content {
     padding-top: desktop-vw(16px);
+
+    @include mobile {
+      padding-top: mobile-vw(16px);
+    }
 
     > p {
       @include dims(desktop-vw(410px), auto);
@@ -46,6 +82,13 @@
       font-weight: 400;
       letter-spacing: -0.03em;
       margin-bottom: desktop-vw(50px);
+
+      @include mobile {
+        @include dims(auto);
+        font-size: mobile-vw(22px);
+        margin-bottom: mobile-vw(50px);
+        text-align: center;
+      }
     }
 
     > button {
@@ -58,6 +101,13 @@
       letter-spacing: -0.03em;
       margin-bottom: desktop-vw(50px);
       padding: desktop-vw(12px) desktop-vw(12px);
+
+      @include mobile {
+        border-radius: mobile-vw(10px);
+        font-size: mobile-vw(24px);
+        margin-bottom: mobile-vw(50px);
+        padding: mobile-vw(12px) mobile-vw(12px);
+      }
     }
   }
 
@@ -65,5 +115,10 @@
     @include position(absolute, auto, 0, 0, auto);
     @include dims(desktop-vw(450px), desktop-vw(360px));
     transform: translate(desktop-vw(-250px), desktop-vw(-100px));
+
+    @include mobile {
+      @include dims(mobile-vw(180px));
+      transform: translate(mobile-vw(-20px), mobile-vw(0px));
+    }
   }
 }
