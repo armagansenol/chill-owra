@@ -372,12 +372,11 @@ function Cup(nodes: GLTFResult["nodes"]) {
 
   const materialProps = useControls("cup", {
     thickness: { value: 0.1, min: 0, max: 3, step: 0.05 },
-    roughness: { value: 0.1, min: 0, max: 1, step: 0.01 }, // Increase roughness for less reflection
-    transmission: { value: 1, min: 0, max: 1, step: 0.01 }, // Increase transmission for more transparency
+    roughness: { value: 0.1, min: 0, max: 1, step: 0.01 },
+    transmission: { value: 1, min: 0, max: 1, step: 0.01 },
     ior: { value: 1.3, min: 1, max: 20, step: 0.01 },
-    chromaticAberration: { value: 0.02, min: 0, max: 1 },
-    clearcoat: { value: 1, min: 0, max: 1, step: 0.01 }, // Reduce clearcoat for less reflection
-    metalness: { value: 0.1, min: 0, max: 1, step: 0.01 }, // Ensure metalness is low for plastic
+    clearcoat: { value: 1, min: 0, max: 1, step: 0.01 },
+    metalness: { value: 0.15, min: 0, max: 1, step: 0.01 },
     backside: { value: false },
   })
 
@@ -388,7 +387,7 @@ function Cup(nodes: GLTFResult["nodes"]) {
           geometry={nodes.CUsersberkaOneDriveMasaüstüBardak_Ustobj.geometry}
           position={[1.37532806, -83.60058784, 0.00108719]}
         >
-          <meshPhysicalMaterial {...materialProps} side={THREE.DoubleSide} transparent={true} opacity={0.5} />
+          <MeshTransmissionMaterial {...materialProps} side={THREE.DoubleSide} transparent={true} opacity={0.6} />
         </mesh>
 
         <mesh geometry={nodes.CUsersberkaOneDriveMasaüstüBardak_Altobj.geometry} position={[1.3753624, -79.21138, 0]}>

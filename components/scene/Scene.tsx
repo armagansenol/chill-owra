@@ -11,6 +11,9 @@ import * as THREE from "three"
 import { AmbientLight, SpotLight } from "three"
 extend({ AmbientLight, SpotLight })
 
+import { EffectComposer, Bloom, LUT, BrightnessContrast, HueSaturation, ToneMapping } from "@react-three/postprocessing"
+import { ToneMappingMode } from "postprocessing"
+
 import { IceGlass } from "@/components/ice-glass"
 import { LoadingSpinner } from "@/components/utility/loading-spinner"
 
@@ -42,11 +45,11 @@ export default function Scene() {
 
         <CanvasText />
 
-        <Environment preset="studio" environmentIntensity={0.2}>
+        <Environment preset="studio" environmentIntensity={0.2} resolution={512}>
           <Lightformer
             position={[5, 0, 0]}
             form="rect"
-            intensity={10}
+            intensity={1}
             color="#ffffff"
             scale={[1, 5, 0]}
             target={[0, 0, 0]}
@@ -64,7 +67,7 @@ export default function Scene() {
           <Lightformer
             position={[10, 0, 0]}
             form="rect"
-            intensity={10}
+            intensity={1}
             color="#ffffff"
             scale={[1, 5, 0]}
             target={[0, 0, 0]}
@@ -80,10 +83,17 @@ export default function Scene() {
           />
         </Environment>
 
+        <EffectComposer>
+          <Bloom mipmapBlur luminanceThreshold={1} intensity={0.1} />
+          <BrightnessContrast brightness={0} contrast={0.1} />
+          <HueSaturation hue={0} saturation={0.1} />
+          <ToneMapping mode={ToneMappingMode.ACES_FILMIC} maxLuminance={0.1} />
+        </EffectComposer>
+
         <ambientLight intensity={0.3} />
-        <pointLight position={[10, 0, 10]} intensity={10.8} />
+        {/* <pointLight position={[10, 0, 10]} intensity={10.8} />
         <pointLight position={[-10, 0, -10]} intensity={10.5} />
-        <pointLight position={[0, 100, 0]} intensity={10.5} />
+        <pointLight position={[0, 100, 0]} intensity={10.5} /> */}
 
         <Rig />
         {/* <OrbitControls /> */}
@@ -180,7 +190,7 @@ function CanvasText() {
         position={[0, vw > 1024 ? 0 : -3.75, -2.2]}
         font="/fonts/dela-gothic-one/DelaGothicOne-Regular.ttf"
         fontSize={vw > 1024 ? 2.5 : 0.75}
-        color="#D9D9D9"
+        color="#000000"
         anchorX="center"
         anchorY="middle"
         fillOpacity={0.5}
