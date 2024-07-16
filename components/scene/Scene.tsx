@@ -6,12 +6,12 @@ import cx from "clsx"
 import { Leva } from "leva"
 import { easing } from "maath"
 import dynamic from "next/dynamic"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import * as THREE from "three"
 import { AmbientLight, SpotLight } from "three"
 extend({ AmbientLight, SpotLight })
 
-import { EffectComposer, Bloom, LUT, BrightnessContrast, HueSaturation, ToneMapping } from "@react-three/postprocessing"
+import { Bloom, BrightnessContrast, EffectComposer, HueSaturation, ToneMapping } from "@react-three/postprocessing"
 import { ToneMappingMode } from "postprocessing"
 
 import { IceGlass } from "@/components/ice-glass"
