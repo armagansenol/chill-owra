@@ -46,8 +46,8 @@ export default function Scene() {
           <Lightformer
             position={[5, 0, 0]}
             form="rect"
-            intensity={1}
-            color="#a2d2df"
+            intensity={10}
+            color="#ffffff"
             scale={[1, 5, 0]}
             target={[0, 0, 0]}
           />
@@ -56,7 +56,7 @@ export default function Scene() {
             position={[0, -10, 0]}
             form="rect"
             intensity={5}
-            color="#a2d2df"
+            color="#ffffff"
             scale={[1, 5, 0]}
             target={[0, 0, 0]}
           />
@@ -64,8 +64,8 @@ export default function Scene() {
           <Lightformer
             position={[10, 0, 0]}
             form="rect"
-            intensity={1}
-            color="#a2d2df"
+            intensity={10}
+            color="#ffffff"
             scale={[1, 5, 0]}
             target={[0, 0, 0]}
           />
@@ -74,7 +74,7 @@ export default function Scene() {
             position={[-1, 0, 0]}
             form="rect"
             intensity={5}
-            color="#a2d2df"
+            color="#ffffff"
             scale={[1, 5, 0]}
             target={[0, 0, 0]}
           />

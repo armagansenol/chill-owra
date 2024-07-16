@@ -377,7 +377,7 @@ function Cup(nodes: GLTFResult["nodes"]) {
     ior: { value: 1.3, min: 1, max: 20, step: 0.01 },
     chromaticAberration: { value: 0.02, min: 0, max: 1 },
     clearcoat: { value: 1, min: 0, max: 1, step: 0.01 }, // Reduce clearcoat for less reflection
-    metalness: { value: 0, min: 0, max: 1, step: 0.01 }, // Ensure metalness is low for plastic
+    metalness: { value: 0.1, min: 0, max: 1, step: 0.01 }, // Ensure metalness is low for plastic
     backside: { value: false },
   })
 
@@ -388,7 +388,7 @@ function Cup(nodes: GLTFResult["nodes"]) {
           geometry={nodes.CUsersberkaOneDriveMasaüstüBardak_Ustobj.geometry}
           position={[1.37532806, -83.60058784, 0.00108719]}
         >
-          <MeshTransmissionMaterial {...materialProps} />
+          <meshPhysicalMaterial {...materialProps} side={THREE.DoubleSide} transparent={true} opacity={0.5} />
         </mesh>
 
         <mesh geometry={nodes.CUsersberkaOneDriveMasaüstüBardak_Altobj.geometry} position={[1.3753624, -79.21138, 0]}>
