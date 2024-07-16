@@ -26,18 +26,13 @@ export default function IceCube(props: Props) {
   const meshRef = React.useRef<any>(null)
 
   const tex = useLoader(THREE.TextureLoader, "/img/ice-texture-square.jpg")
-  const bump = useLoader(THREE.TextureLoader, "/img/ice-texture-square.jpg")
 
   React.useMemo(() => {
-    const vec2 = new THREE.Vector2(1, 1)
+    const vec2 = new THREE.Vector2(2.8, 2.8)
     tex.wrapS = THREE.RepeatWrapping
     tex.wrapT = THREE.RepeatWrapping
     tex.repeat.set(vec2.x, vec2.y)
-
-    bump.wrapS = THREE.RepeatWrapping
-    bump.wrapT = THREE.RepeatWrapping
-    bump.repeat.set(vec2.x, vec2.y)
-  }, [tex, bump])
+  }, [tex])
 
   const materialProps = useControls("floatingIceCubes", {
     transmissionSampler: true,
@@ -86,7 +81,7 @@ export default function IceCube(props: Props) {
         >
           <CuboidCollider args={[1, 1, 1]} />
           <mesh ref={meshRef} geometry={nodes.pCube1.geometry} rotation={[-Math.PI, 0, 0]}>
-            <meshPhysicalMaterial {...materialProps} map={tex} bumpMap={tex} bumpScale={4} opacity={1} />
+            <meshPhysicalMaterial {...materialProps} map={tex} bumpMap={tex} bumpScale={4} />
           </mesh>
         </RigidBody>
       </Float>
