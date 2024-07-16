@@ -25,10 +25,10 @@ export default function IceCube(props: Props) {
   const { nodes } = useGLTF("/glb/ice-origin-center.glb") as GLTFResult
   const meshRef = React.useRef<any>(null)
 
-  const tex = useLoader(THREE.TextureLoader, "/img/ice-texture-square.jpg")
+  const tex = useLoader(THREE.TextureLoader, "/img/ice-texture.jpg")
 
   React.useMemo(() => {
-    const vec2 = new THREE.Vector2(2.8, 2.8)
+    const vec2 = new THREE.Vector2(5, 10)
     tex.wrapS = THREE.RepeatWrapping
     tex.wrapT = THREE.RepeatWrapping
     tex.repeat.set(vec2.x, vec2.y)
@@ -39,27 +39,26 @@ export default function IceCube(props: Props) {
     samples: { value: 4, min: 1, max: 32, step: 1 },
     resolution: { value: 512, min: 256, max: 2048, step: 256 },
     transmission: { value: 1, min: 0, max: 1 },
-    roughness: { value: 0.0, min: 0, max: 1, step: 0.01 },
+    roughness: { value: 0.1, min: 0, max: 1, step: 0.01 },
     thickness: { value: 2.3, min: 0, max: 10, step: 0.01 },
     ior: { value: 1.35, min: 1, max: 5, step: 0.01 },
-    chromaticAberration: { value: 0, min: 0, max: 1 },
     anisotropy: { value: 0.1, min: 0, max: 1, step: 0.01 },
     clearcoat: { value: 1, min: 0, max: 1 },
+    distortion: { value: 0, min: 0, max: 1, step: 0.01 },
+    distortionScale: { value: 0.2, min: 0.01, max: 1, step: 0.01 },
+    temporalDistortion: { value: 0, min: 0, max: 1, step: 0.01 },
     attenuationDistance: { value: 0.5, min: 0, max: 10, step: 0.01 },
     attenuationColor: "#ffffff",
     color: "#ffffff",
-    bg: "#ffffff",
-    distortion: 0,
-    temporalDistortion: 0,
   })
 
-  useFrame(() => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x += 0.001
-      meshRef.current.rotation.y += 0.001
-      meshRef.current.rotation.z += 0.001
-    }
-  })
+  // useFrame(() => {
+  //   if (meshRef.current) {
+  //     meshRef.current.rotation.x += 0.001
+  //     meshRef.current.rotation.y += 0.001
+  //     meshRef.current.rotation.z += 0.001
+  //   }
+  // })
 
   return (
     <>
@@ -81,7 +80,7 @@ export default function IceCube(props: Props) {
         >
           <CuboidCollider args={[1, 1, 1]} />
           <mesh ref={meshRef} geometry={nodes.pCube1.geometry} rotation={[-Math.PI, 0, 0]}>
-            <meshPhysicalMaterial {...materialProps} map={tex} bumpMap={tex} bumpScale={4} />
+            <MeshTransmissionMaterial {...materialProps} map={tex} bumpMap={tex} bumpScale={4} />
           </mesh>
         </RigidBody>
       </Float>

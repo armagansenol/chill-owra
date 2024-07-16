@@ -6,7 +6,7 @@ import cx from "clsx"
 import { Leva } from "leva"
 import { easing } from "maath"
 import dynamic from "next/dynamic"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import * as THREE from "three"
 import { AmbientLight, SpotLight } from "three"
 extend({ AmbientLight, SpotLight })
@@ -26,7 +26,10 @@ const IceCube = dynamic(() => import("@/components/ice-cube"), {
 export default function Scene() {
   return (
     <div className={cx("w-full h-full")}>
-      <Canvas frameloop="always">
+      <Canvas
+        frameloop="always"
+        //  gl={{ antialias: true, logarithmicDepthBuffer: true, pixelRatio: 40 }}
+      >
         <color attach="background" args={["#ffffff"]} />
 
         {/* <PerspectiveCamera makeDefault position={[0, 100, 180]} near={0.1} fov={100} /> */}
@@ -39,47 +42,48 @@ export default function Scene() {
 
         <CanvasText />
 
-        <Environment preset="studio">
+        <Environment preset="studio" environmentIntensity={0.2}>
           <Lightformer
             position={[5, 0, 0]}
             form="rect"
-            intensity={5}
+            intensity={1}
             color="#a2d2df"
             scale={[1, 5, 0]}
             target={[0, 0, 0]}
           />
 
-          {/* <Lightformer
+          <Lightformer
             position={[0, -10, 0]}
             form="rect"
             intensity={5}
             color="#a2d2df"
             scale={[1, 5, 0]}
             target={[0, 0, 0]}
-          /> */}
+          />
 
           <Lightformer
             position={[10, 0, 0]}
             form="rect"
-            intensity={5}
+            intensity={1}
             color="#a2d2df"
             scale={[1, 5, 0]}
             target={[0, 0, 0]}
           />
 
-          {/* <Lightformer
+          <Lightformer
             position={[-1, 0, 0]}
             form="rect"
             intensity={5}
             color="#a2d2df"
             scale={[1, 5, 0]}
             target={[0, 0, 0]}
-          />  */}
+          />
         </Environment>
 
         <ambientLight intensity={0.3} />
-        <pointLight position={[10, 0, 10]} intensity={100.8} />
-        <pointLight position={[-10, 0, -10]} intensity={100.5} />
+        <pointLight position={[10, 0, 10]} intensity={10.8} />
+        <pointLight position={[-10, 0, -10]} intensity={10.5} />
+        <pointLight position={[0, 100, 0]} intensity={10.5} />
 
         <Rig />
         {/* <OrbitControls /> */}
@@ -173,7 +177,7 @@ function CanvasText() {
   return (
     <>
       <Text
-        position={[0, vw > 1024 ? 0 : 0.5, -2.2]}
+        position={[0, vw > 1024 ? 0 : -3.75, -2.2]}
         font="/fonts/dela-gothic-one/DelaGothicOne-Regular.ttf"
         fontSize={vw > 1024 ? 2.5 : 0.75}
         color="#D9D9D9"

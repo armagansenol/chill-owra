@@ -78,22 +78,22 @@ export function IceGlass(props: JSX.IntrinsicElements["group"]) {
       <group
         {...props}
         dispose={null}
-        scale={vw > 1024 ? 0.035 : 0.022}
-        position={[0, vw > 1024 ? -4 : -2, 0]}
+        scale={vw > 1024 ? 0.035 : 0.0275}
+        position={[0, vw > 1024 ? -4 : -3, 0]}
         rotation={[0, 0, 0]}
       >
         <group ref={meshRef}>
           {/* <IceCubes {...nodes} /> */}
           <Cup {...nodes} />
         </group>
-        <mesh geometry={new THREE.BoxGeometry(4, 5, 0)} scale={44} position={[5, vw > 1024 ? 105 : -2, 0]}>
-          <meshStandardMaterial
+        <mesh geometry={new THREE.BoxGeometry(4, 5, 0)} scale={44} position={[5, vw > 1024 ? 105 : 105, 0]}>
+          <meshPhysicalMaterial
             map={iceCubesMap}
             bumpMap={iceCubesMap}
             bumpScale={4}
             color={"#D5FFFF"}
             transparent={true}
-            opacity={0.4}
+            opacity={0.5}
           />
         </mesh>
       </group>
@@ -388,7 +388,7 @@ function Cup(nodes: GLTFResult["nodes"]) {
           geometry={nodes.CUsersberkaOneDriveMasaüstüBardak_Ustobj.geometry}
           position={[1.37532806, -83.60058784, 0.00108719]}
         >
-          <MeshTransmissionMaterial {...materialProps} side={THREE.DoubleSide} />
+          <MeshTransmissionMaterial {...materialProps} />
         </mesh>
 
         <mesh geometry={nodes.CUsersberkaOneDriveMasaüstüBardak_Altobj.geometry} position={[1.3753624, -79.21138, 0]}>
