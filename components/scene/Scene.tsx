@@ -1,5 +1,5 @@
 import { gsap } from "@/lib/gsap"
-import { Environment, Html, Lightformer, OrthographicCamera, Text } from "@react-three/drei"
+import { Environment, Html, Lightformer, OrthographicCamera, Stats, Text } from "@react-three/drei"
 import { Canvas, extend, useFrame, useThree } from "@react-three/fiber"
 import { BallCollider, CuboidCollider, Physics, RapierRigidBody, RigidBody } from "@react-three/rapier"
 import cx from "clsx"
@@ -99,6 +99,7 @@ export default function Scene() {
         {/* <OrbitControls /> */}
       </Canvas>
       <Leva hidden={false} />
+      <Stats />
     </div>
   )
 }

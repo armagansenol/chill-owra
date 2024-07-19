@@ -371,12 +371,12 @@ function Cup(nodes: GLTFResult["nodes"]) {
   }, [packageMap])
 
   const materialProps = useControls("cup", {
-    thickness: { value: 0.1, min: 0, max: 3, step: 0.05 },
-    roughness: { value: 0.1, min: 0, max: 1, step: 0.01 },
-    transmission: { value: 1, min: 0, max: 1, step: 0.01 },
-    ior: { value: 1.3, min: 1, max: 20, step: 0.01 },
+    thickness: { value: 1.05, min: 0, max: 3, step: 0.05 },
+    roughness: { value: 0.21, min: 0, max: 1, step: 0.01 },
+    transmission: { value: 0.77, min: 0, max: 1, step: 0.01 },
+    ior: { value: 1.82, min: 1, max: 20, step: 0.01 },
     clearcoat: { value: 1, min: 0, max: 1, step: 0.01 },
-    metalness: { value: 0.15, min: 0, max: 1, step: 0.01 },
+    metalness: { value: 0.14, min: 0, max: 1, step: 0.01 },
     backside: { value: false },
   })
 
