@@ -1,9 +1,17 @@
 import { gsap } from "@/lib/gsap"
-import { Environment, Html, Lightformer, OrthographicCamera, Stats, Text } from "@react-three/drei"
-import { Canvas, extend, useFrame, useThree } from "@react-three/fiber"
+import {
+  Environment,
+  Html,
+  Lightformer,
+  MeshTransmissionMaterial,
+  OrthographicCamera,
+  Stats,
+  Text,
+} from "@react-three/drei"
+import { Canvas, extend, useFrame, useLoader, useThree } from "@react-three/fiber"
 import { BallCollider, CuboidCollider, Physics, RapierRigidBody, RigidBody } from "@react-three/rapier"
 import cx from "clsx"
-import { Leva } from "leva"
+import { Leva, useControls } from "leva"
 import { easing } from "maath"
 import dynamic from "next/dynamic"
 import { useRef } from "react"
@@ -44,6 +52,8 @@ export default function Scene() {
         <PhysicsIceCube />
 
         <CanvasText />
+
+        <IceBottom />
 
         <Environment preset="studio" environmentIntensity={0.2} resolution={512}>
           <Lightformer
@@ -198,6 +208,21 @@ function CanvasText() {
       >
         {`Coming Soon`}
       </Text>
+    </>
+  )
+}
+
+function IceBottom() {
+  const iceBottom = useLoader(THREE.TextureLoader, "/img/ice-bottom.png")
+
+  const { viewport } = useThree()
+  const vw = viewport.width * 100
+
+  return (
+    <>
+      <mesh geometry={new THREE.BoxGeometry(8, 3.5, 0)} scale={4} position={[0, vw > 1024 ? -2 : 0, -5]}>
+        <meshStandardMaterial map={iceBottom} transparent={true} opacity={0.9} />
+      </mesh>
     </>
   )
 }

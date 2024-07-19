@@ -8,6 +8,9 @@ import Button from "@/components/button"
 import { ClientOnly } from "@/components/isomorphic"
 import { LoadingSpinner } from "@/components/utility/loading-spinner"
 import dynamic from "next/dynamic"
+import { Img } from "@/components/utility/img"
+
+import iceBottom from "@/public/img/ice-bottom.png"
 
 const Scene = dynamic(() => import("@/components/scene").then((m) => m.Scene), {
   loading: () => (
@@ -34,6 +37,10 @@ export default function Home() {
       </header>
 
       <Button />
+
+      {/* <div className={s.imgC}>
+        <Img alt="Ice Cubes" src={iceBottom} />
+      </div> */}
     </div>
   )
 }
