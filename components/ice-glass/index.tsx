@@ -78,8 +78,8 @@ export function IceGlass(props: JSX.IntrinsicElements["group"]) {
       <group
         {...props}
         dispose={null}
-        scale={vw > 1024 ? 0.035 : 0.0275}
-        position={[0, vw > 1024 ? -4 : -3, 0]}
+        scale={vw > 1024 ? 0.04 : 0.0275}
+        position={[0, vw > 1024 ? -5 : -3, 0]}
         rotation={[0, 0, 0]}
       >
         <group ref={meshRef}>

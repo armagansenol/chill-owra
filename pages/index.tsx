@@ -11,6 +11,7 @@ import dynamic from "next/dynamic"
 import { Img } from "@/components/utility/img"
 
 import iceBottom from "@/public/img/ice-bottom.png"
+import { CustomHead } from "@/components/utility/custom-head"
 
 const Scene = dynamic(() => import("@/components/scene").then((m) => m.Scene), {
   loading: () => (
@@ -23,24 +24,33 @@ const Scene = dynamic(() => import("@/components/scene").then((m) => m.Scene), {
 
 export default function Home() {
   return (
-    <div className={cx(s.home, "w-screen h-screen relative")}>
-      <div className="absolute top-0 left-0 w-full h-full z-10">
-        <ClientOnly>
-          <Scene />
-        </ClientOnly>
-      </div>
-
-      <header className={cx(s.header, "flex items-center justify-center pointer-events-none z-20 relative")}>
-        <div className={s.logoC}>
-          <OwraLogo />
+    <>
+      <CustomHead
+        canonical="https://chill-owra.com"
+        title="Chill Owra"
+        description="Chill Owra - Ice Glass"
+        keywords={["ice", "ice glass", "drink", "chill", "chill owra"]}
+        themeColor="#0075ce"
+      ></CustomHead>
+      <div className={cx(s.home, "w-screen h-screen relative overflow-hidden")}>
+        <div className="absolute top-0 left-0 w-full h-full z-10">
+          <ClientOnly>
+            <Scene />
+          </ClientOnly>
         </div>
-      </header>
 
-      <Button />
+        <header className={cx(s.header, "flex items-center justify-center pointer-events-none z-20 relative")}>
+          <div className={s.logoC}>
+            <OwraLogo />
+          </div>
+        </header>
 
-      {/* <div className={s.imgC}>
-        <Img alt="Ice Cubes" src={iceBottom} />
-      </div> */}
-    </div>
+        <Button />
+
+        <div className={s.bottomImgC}>
+          <Img alt="Ice Cubes" className="object-contain" src={iceBottom} />
+        </div>
+      </div>
+    </>
   )
 }

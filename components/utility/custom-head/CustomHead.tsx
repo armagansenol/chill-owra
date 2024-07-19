@@ -10,15 +10,7 @@ type Props = {
   twitter?: NextSeoProps["twitter"]
   themeColor?: NextSeoProps["themeColor"]
 }
-export default function CustomHead({
-  canonical,
-  title,
-  description,
-  image,
-  keywords,
-  themeColor = "#007538",
-  twitter = { handle: "@pentasventures" },
-}: Props) {
+export default function CustomHead({ canonical, title, description, image, keywords, themeColor = "#007538" }: Props) {
   return (
     <>
       <NextHead>
@@ -73,10 +65,6 @@ export default function CustomHead({
           defaultImageWidth: 522,
           defaultImageHeight: 84,
           site_name: "pentasventures.com",
-        }}
-        twitter={{
-          handle: twitter.handle,
-          cardType: "summary_large_image",
         }}
       />
     </>
