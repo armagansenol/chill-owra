@@ -23,8 +23,38 @@
     z-index: 1000;
 
     @include mobile {
-      @include dims(250vw, auto);
+      @include dims(180vw, auto);
       @include position(absolute, auto, 0, 0, 50%);
+    }
+  }
+
+  .mobile {
+    // @include dims(100vw, 100%);
+
+    .iceGlassC {
+      @include dims(mobile-vw(230px), mobile-vw(330px));
+    }
+
+    .iceC {
+      &.b1 {
+        @include position(absolute, mobile-vw(250px), auto, auto, mobile-vw(50px));
+        @include dims(mobile-vw(75px));
+      }
+
+      &.b2 {
+        @include position(absolute, mobile-vw(200px), auto, auto, mobile-vw(260px));
+        @include dims(mobile-vw(100px));
+      }
+
+      &.b3 {
+        @include position(absolute, mobile-vw(350px), auto, auto, mobile-vw(300px));
+        @include dims(mobile-vw(100px));
+      }
+
+      &.b4 {
+        @include position(absolute, mobile-vw(350px), auto, auto, mobile-vw(-20px));
+        @include dims(mobile-vw(100px));
+      }
     }
   }
 }
