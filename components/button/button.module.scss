@@ -120,6 +120,7 @@
     @include mobile {
       @include dims(mobile-vw(180px));
       transform: translate(mobile-vw(-5px), mobile-vw(-30px));
+      display: none;
     }
   }
 }
