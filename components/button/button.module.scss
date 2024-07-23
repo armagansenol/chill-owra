@@ -54,7 +54,7 @@
       letter-spacing: -0.03em;
 
       @include mobile {
-        font-size: mobile-vw(24px);
+        font-size: mobile-vw(22px);
       }
     }
 
@@ -86,7 +86,7 @@
       @include mobile {
         @include dims(auto);
         font-size: mobile-vw(22px);
-        margin-bottom: mobile-vw(50px);
+        margin-bottom: mobile-vw(10px);
         text-align: center;
       }
     }
@@ -104,9 +104,10 @@
 
       @include mobile {
         border-radius: mobile-vw(10px);
-        font-size: mobile-vw(24px);
-        margin-bottom: mobile-vw(50px);
-        padding: mobile-vw(12px) mobile-vw(12px);
+        font-size: mobile-vw(20px);
+        margin-bottom: mobile-vw(30px);
+        margin-top: mobile-vw(20px);
+        padding: mobile-vw(5px) mobile-vw(8px);
       }
     }
   }
@@ -118,7 +119,7 @@
 
     @include mobile {
       @include dims(mobile-vw(180px));
-      transform: translate(mobile-vw(-20px), mobile-vw(0px));
+      transform: translate(mobile-vw(-5px), mobile-vw(-30px));
     }
   }
 }
