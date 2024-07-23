@@ -47,9 +47,17 @@ export default function Home() {
           "fixed top-0 left-0 w-screen h-full tablet:top-auto tablet:left:auto tablet:relative tablet:h-screen  overflow-hidden"
         )}
       >
+        <header className={cx(s.header, "flex items-center justify-center pointer-events-none z-20 relative")}>
+          <div className={s.logoC}>
+            <OwraLogo />
+          </div>
+        </header>
+
         <ClientOnly>
           {!isMobile ? (
-            <div className="absolute top-0 left-0 w-full h-full z-10">{/* <Scene /> */}</div>
+            <div className="absolute top-0 left-0 w-full h-full z-10">
+              <Scene />
+            </div>
           ) : (
             <div className={cx(s.mobile, "fixed top-0 left-0 w-screen h-full flex items-center justify-center")}>
               <div className={s.iceGlassC}>
@@ -74,12 +82,6 @@ export default function Home() {
             </div>
           )}
         </ClientOnly>
-
-        <header className={cx(s.header, "flex items-center justify-center pointer-events-none z-20 relative")}>
-          <div className={s.logoC}>
-            <OwraLogo />
-          </div>
-        </header>
 
         <Button />
 

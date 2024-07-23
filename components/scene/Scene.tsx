@@ -28,7 +28,7 @@ const IceCube = dynamic(() => import("@/components/ice-cube"), {
 
 export default function Scene() {
   return (
-    <div className={cx("w-full h-full")}>
+    <div className={cx("w-full h-full -z-1")}>
       <Canvas
         frameloop="always"
         //  gl={{ antialias: true, logarithmicDepthBuffer: true, pixelRatio: 40 }}
@@ -97,7 +97,7 @@ export default function Scene() {
         <pointLight position={[-10, 0, -10]} intensity={10.5} />
         <pointLight position={[0, 100, 0]} intensity={10.5} /> */}
 
-        <Rig />
+        {/* <Rig /> */}
         {/* <OrbitControls /> */}
       </Canvas>
       <Leva hidden={true} />

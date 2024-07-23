@@ -20,10 +20,10 @@
     opacity: 0.5;
     pointer-events: none;
     transform: translateX(-50%);
-    z-index: 1000;
+    z-index: 10;
 
     @include mobile {
-      @include position(fixed, auto, 0, 0%, 50%);
+      @include position(fixed, auto, 0, -10%, 50%);
       @include dims(180vw, auto);
     }
   }
@@ -42,13 +42,13 @@
       }
 
       &.b2 {
-        @include position(absolute, mobile-vw(200px), auto, auto, mobile-vw(260px));
+        @include position(absolute, mobile-vw(220px), auto, auto, mobile-vw(260px));
         @include dims(mobile-vw(100px));
       }
 
       &.b3 {
-        @include position(absolute, mobile-vw(350px), auto, auto, mobile-vw(300px));
-        @include dims(mobile-vw(100px));
+        @include position(absolute, mobile-vw(370px), auto, auto, mobile-vw(280px));
+        @include dims(mobile-vw(80px));
       }
 
       &.b4 {

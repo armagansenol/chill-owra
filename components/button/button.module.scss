@@ -7,7 +7,7 @@
   padding: 0 desktop-vw(12px);
   font-family: var(--font-fustat);
   font-weight: 700;
-  z-index: 100000000;
+  z-index: 15;
 
   @include mobile {
     @include position(fixed, auto, auto, 6%, 50%);
