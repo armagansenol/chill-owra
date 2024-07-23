@@ -39,9 +39,9 @@ export default function Scene() {
         <OrthographicCamera makeDefault position={[0, 0, 10]} near={0.1} zoom={50} />
         {/* <Camera /> */}
 
-        <IceGlass />
-
         <PhysicsIceCube />
+
+        <IceGlass />
 
         <CanvasText />
 
@@ -97,9 +97,10 @@ export default function Scene() {
         <pointLight position={[-10, 0, -10]} intensity={10.5} />
         <pointLight position={[0, 100, 0]} intensity={10.5} /> */}
 
-        {/* <Rig /> */}
+        <Rig />
         {/* <OrbitControls /> */}
       </Canvas>
+
       <Leva hidden={true} />
       {/* <Stats  /> */}
     </div>
@@ -112,10 +113,10 @@ function Walls() {
   return (
     <>
       {/* rectangle */}
-      <CuboidCollider position={[0, viewportHeight / 2 + 1, 0]} args={[viewportWidth / 2, 1, 3]} />
-      <CuboidCollider position={[0, -viewportHeight / 2 - 1, 0]} args={[viewportWidth / 2, 1, 3]} />
-      <CuboidCollider position={[-viewportWidth / 2 - 1, 0, 0]} args={[1, viewportHeight * 10, 3]} />
-      <CuboidCollider position={[viewportWidth / 2 + 1, 0, 0]} args={[1, viewportHeight * 10, 3]} />
+      <CuboidCollider position={[0, viewportHeight / 2 + 1, 0]} args={[viewportWidth / 2, 1, 30]} />
+      <CuboidCollider position={[0, -viewportHeight / 2 - 1, 0]} args={[viewportWidth / 2, 1, 30]} />
+      <CuboidCollider position={[-viewportWidth / 2 - 1, 0, 0]} args={[1, viewportHeight * 10, 30]} />
+      <CuboidCollider position={[viewportWidth / 2 + 1, 0, 0]} args={[1, viewportHeight * 10, 30]} />
       {/* rectangle */}
     </>
   )

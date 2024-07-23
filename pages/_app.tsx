@@ -1,4 +1,3 @@
-import { RealViewport } from "@/components/real-viewport"
 import { Modal } from "@/components/utility/modal"
 import "@/styles/global.scss"
 import "@/styles/tailwind-base.css"
@@ -9,7 +8,6 @@ export default function App({ Component, pageProps }: AppProps) {
     <div>
       <Component {...pageProps} />
       <Modal />
-      <RealViewport />
     </div>
   )
 }
