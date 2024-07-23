@@ -41,7 +41,12 @@ export default function Home() {
         keywords={["ice", "ice glass", "drink", "chill", "chill owra"]}
         themeColor="#0075ce"
       ></CustomHead>
-      <div className={cx(s.home, "w-screen h-screen relative overflow-hidden")}>
+      <div
+        className={cx(
+          s.home,
+          "fixed top-0 left-0 w-screen h-full tablet:top-auto tablet:left:auto tablet:relative tablet:h-screen  overflow-hidden"
+        )}
+      >
         <ClientOnly>
           {!isMobile ? (
             <div className="absolute top-0 left-0 w-full h-full z-10">{/* <Scene /> */}</div>
