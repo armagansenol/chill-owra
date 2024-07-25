@@ -19,7 +19,7 @@ export default function Button(props: ButtonProps) {
       <>
         <div className={cx(s.modalContent, "h-10 w-10 bg-white")}>
           <div className={cx(s.header, "flex items-center justify-between")}>
-            <p className={s.title}>Feeling Thirsty</p>
+            <p className={s.title}>Feeling Thirsty?</p>
             <span className={cx(s.iconC, "cursor-pointer")} onClick={() => modalStore.setIsOpen(false)}>
               <IconClose />
             </span>
