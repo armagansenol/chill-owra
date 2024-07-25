@@ -28,7 +28,9 @@ export default function Button(props: ButtonProps) {
           <div className={cx(s.content, "flex flex-col items-center tablet:items-start")}>
             <p>If you’re craving your favorite frozen concoction, drop us an email.</p>
             <p>We promise it’s worth the brain freeze!</p>
-            <Link href="mailto:sales@owra.co">Drop a Line & Chill</Link>
+            <Link className={s.button} href="mailto:sales@owra.co">
+              Drop a Line & Chill
+            </Link>
           </div>
 
           <div className={s.iceC}>
