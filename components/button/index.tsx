@@ -6,6 +6,7 @@ import { useModalStore } from "@/lib/store/modal"
 import iceSitting from "@/public/img/ice-sitting.png"
 import { IconClose, IconCursorClick } from "../icons/logo"
 import { Img } from "../utility/img"
+import { Link } from "../utility/link"
 
 export interface ButtonProps {}
 
@@ -27,7 +28,7 @@ export default function Button(props: ButtonProps) {
           <div className={cx(s.content, "flex flex-col items-center tablet:items-start")}>
             <p>If you’re craving your favorite frozen concoction, drop us an email.</p>
             <p>We promise it’s worth the brain freeze!</p>
-            <button>Drop a Line & Chill</button>
+            <Link href="mailto:sales@owra.co">Drop a Line & Chill</Link>
           </div>
 
           <div className={s.iceC}>
